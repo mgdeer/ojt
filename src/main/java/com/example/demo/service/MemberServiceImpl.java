@@ -28,7 +28,8 @@ public class MemberServiceImpl implements MemberService {
             Member member = new Member(userCreateForm.getId().trim(),
                     userCreateForm.getName().trim(),
                     encryptedPassword,
-                    userCreateForm.getEmail().trim());
+                    userCreateForm.getEmail().trim(),
+                    userCreateForm.getRole());
             memberRepository.save(member);
             return ResponseEntity.ok("Signup successful");
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import com.example.demo.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,4 +12,5 @@ public class UserCreateForm {
     private String email;
     private String password;
     private String passwordConfirm;
+    private Role role;
 }

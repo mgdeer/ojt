@@ -1,8 +1,7 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.example.demo.Role;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,4 +23,7 @@ public class Member {
 
     @Column(nullable = false)
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }
