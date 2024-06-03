@@ -19,7 +19,7 @@ public class Member {
     @Column(nullable = false)
     private String name;
 
-    @Column(columnDefinition = "VARCHAR(256)", nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
