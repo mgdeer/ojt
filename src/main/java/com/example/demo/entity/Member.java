@@ -6,12 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member {
+public class Member extends BaseTimeEntity{
     @Id
     private String id;
 
@@ -24,6 +23,13 @@ public class Member {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private String nickname;
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
+
+    @Column(nullable = false)
+    private String department;
 }

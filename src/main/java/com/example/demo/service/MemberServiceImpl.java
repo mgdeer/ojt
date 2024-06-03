@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -29,7 +30,9 @@ public class MemberServiceImpl implements MemberService {
                     userCreateForm.getName().trim(),
                     encryptedPassword,
                     userCreateForm.getEmail().trim(),
-                    userCreateForm.getRole());
+                    userCreateForm.getNickname().trim(),
+                    userCreateForm.getRole(),
+                    userCreateForm.getDepartment().trim());
             memberRepository.save(member);
             return ResponseEntity.ok("Signup successful");
         } catch (Exception e) {
