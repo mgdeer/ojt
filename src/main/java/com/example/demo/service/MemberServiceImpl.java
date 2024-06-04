@@ -20,9 +20,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public ResponseEntity<String> signup(UserCreateForm userCreateForm) {
-        if(!userCreateForm.getPassword().equals(userCreateForm.getPasswordConfirm())){
-            return ResponseEntity.badRequest().body("Passwords do not match");
-        }
+//        if(!userCreateForm.getPassword().equals(userCreateForm.getPasswordConfirm())){
+//            return ResponseEntity.badRequest().body("Passwords do not match");
+//        }
         try {
             String encryptedPassword = sha256.encrypt(userCreateForm.getId()
                     + userCreateForm.getPassword());
