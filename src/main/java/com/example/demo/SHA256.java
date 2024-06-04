@@ -9,8 +9,9 @@ import java.security.NoSuchAlgorithmException;
 public class SHA256 {
 
     public String encrypt(String plainText) throws NoSuchAlgorithmException {
+        String fog = "Peq" + plainText + "4vS";
         MessageDigest md = MessageDigest.getInstance("SHA-256");
-        md.update(plainText.getBytes());
+        md.update(fog.getBytes());
         return bytesToHex(md.digest());
     }
 

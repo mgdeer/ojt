@@ -2,14 +2,11 @@ package com.example.demo.entity;
 
 import com.example.demo.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTimeEntity{
     @Id
     private String id;
@@ -17,7 +14,7 @@ public class Member extends BaseTimeEntity{
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String password;
 
     @Column(nullable = false)
@@ -32,4 +29,15 @@ public class Member extends BaseTimeEntity{
 
     @Column(nullable = false)
     private String department;
+
+    @Builder
+    public Member(String id, String name, String password, String email, String nickname, Role role, String department) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.nickname = nickname;
+        this.role = role;
+        this.department = department;
+    }
 }

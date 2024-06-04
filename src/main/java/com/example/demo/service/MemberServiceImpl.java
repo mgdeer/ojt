@@ -20,19 +20,22 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public ResponseEntity<String> signup(UserCreateForm userCreateForm) {
-        if(!userCreateForm.getPassword().equals(userCreateForm.getPasswordConfirm())){
-            return ResponseEntity.badRequest().body("Passwords do not match");
-        }
+//        if(!userCreateForm.getPassword().equals(userCreateForm.getPasswordConfirm())){
+//            return ResponseEntity.badRequest().body("Passwords do not match");
+//        }
         try {
             String encryptedPassword = sha256.encrypt(userCreateForm.getId()
                     + userCreateForm.getPassword());
-            Member member = new Member(userCreateForm.getId().trim(),
-                    userCreateForm.getName().trim(),
-                    encryptedPassword,
-                    userCreateForm.getEmail().trim(),
-                    userCreateForm.getNickname().trim(),
-                    userCreateForm.getRole(),
-                    userCreateForm.getDepartment().trim());
+            Member member = Member.builder()
+                    .id(userCreateForm.getId().trim())
+                    .password(encryptedPassword)
+                    .department(userCreateForm.getDepartment())
+                    .name(userCreateForm.getName())
+                    .email(userCreateForm.getEmail())
+                    .role(userCreateForm.getRole())
+                    .nickname(userCreateForm.getNickname())
+                    .build();
+
             memberRepository.save(member);
             return ResponseEntity.ok("Signup successful");
         } catch (Exception e) {

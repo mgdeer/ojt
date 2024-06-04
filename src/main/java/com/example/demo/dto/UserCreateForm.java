@@ -11,7 +11,7 @@ public class UserCreateForm {
     private String name;
     private String email;
     private String password;
-    private String passwordConfirm;
+    //private String passwordConfirm;
     private Role role;
     private String nickname;
     private String department;
