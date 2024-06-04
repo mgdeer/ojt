@@ -4,7 +4,7 @@
     <!-- 본문 -->
     <div id="page-content-wrapper">
       <div class="container-fluid">
-        <h1>제품 관리</h1>
+        <h1><i class="bi bi-boxes"></i> 제품 관리</h1>
         <div class="searchOptions">
           <div class="headerTitle">검색 옵션</div>
           <div class="form-check">
@@ -90,13 +90,11 @@ export default {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin: 20px 0;
 }
 .searchInput {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin: 0 0 20px 0;
 }
 .headerTitle {
   padding: 0 20px 0 0;

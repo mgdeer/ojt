@@ -2,22 +2,20 @@
   <!-- 사이드바 -->
   <div id="sidebar-wrapper">
     <ul class="sidebar-nav">
-      <li class="sidebar-brand">
-        <a href="#">OJT Product</a>
-      </li>
+      <div class="sidebar-brand"><i class="bi bi-gear"></i> 관리</div>
       <li>
         <router-link :to="`/management/member/${position}`"
-          >회원 관리</router-link
+          ><i class="bi bi-people-fill"></i> 회원 관리</router-link
         >
       </li>
       <li>
         <router-link :to="`/management/product/${position}`"
-          >제품 관리</router-link
+          ><i class="bi bi-boxes"></i> 제품 관리</router-link
         >
       </li>
-      <li><a href="#">메뉴 3</a></li>
+      <!-- <li><a href="#">메뉴 3</a></li>
       <li><a href="#">메뉴 4</a></li>
-      <li><a href="#">메뉴 5</a></li>
+      <li><a href="#">메뉴 5</a></li> -->
     </ul>
   </div>
   <!-- /사이드바 -->
@@ -41,7 +39,7 @@ export default {
   width: 250px;
   height: 100%;
   margin-left: -250px;
-  background: #000;
+  background: #002333;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -69,6 +67,8 @@ export default {
 }
 
 .sidebar-nav > .sidebar-brand {
+  margin-left: 25px;
+  color: #fff;
   font-size: 1.3em;
   line-height: 3em;
 }
