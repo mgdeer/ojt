@@ -576,7 +576,6 @@ export default {
   methods: {
     searchName(e) {
       e.preventDefault();
-      console.log(this.searchNameValue);
       this.finalFilter = this.members.filter(
         (v) => v.name === this.searchNameValue
       );
@@ -803,6 +802,7 @@ export default {
         this.userNumYears[4]++;
     }
     this.series = [{ name: "사원", data: this.userNumYears }];
+    this.setList();
   },
 };
 </script>
