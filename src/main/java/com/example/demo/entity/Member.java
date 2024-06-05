@@ -7,9 +7,12 @@ import lombok.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@Builder
 public class Member extends BaseTimeEntity{
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -17,7 +20,7 @@ public class Member extends BaseTimeEntity{
     @Column(nullable = false, length = 64)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -30,14 +33,4 @@ public class Member extends BaseTimeEntity{
     @Column(nullable = false)
     private String department;
 
-    @Builder
-    public Member(String id, String name, String password, String email, String nickname, Role role, String department) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
-        this.email = email;
-        this.nickname = nickname;
-        this.role = role;
-        this.department = department;
-    }
 }

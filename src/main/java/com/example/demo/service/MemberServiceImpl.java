@@ -24,10 +24,9 @@ public class MemberServiceImpl implements MemberService {
 //            return ResponseEntity.badRequest().body("Passwords do not match");
 //        }
         try {
-            String encryptedPassword = sha256.encrypt(userCreateForm.getId()
-                    + userCreateForm.getPassword());
+            String encryptedPassword = sha256.encrypt(userCreateForm.getEmail()
+                    + "multiojt19");
             Member member = Member.builder()
-                    .id(userCreateForm.getId().trim())
                     .password(encryptedPassword)
                     .department(userCreateForm.getDepartment())
                     .name(userCreateForm.getName())
@@ -35,7 +34,6 @@ public class MemberServiceImpl implements MemberService {
                     .role(userCreateForm.getRole())
                     .nickname(userCreateForm.getNickname())
                     .build();
-
             memberRepository.save(member);
             return ResponseEntity.ok("Signup successful");
         } catch (Exception e) {
