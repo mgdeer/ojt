@@ -4,7 +4,6 @@ import MyInfo from "../components/myInfo/MyInfo.vue"
 import MyInfoChange from "../components/myInfo/MyInfoChange.vue"
 import PwChange from "../components/myInfo/PwChange.vue"
 import MemberManagement from "../components/management/MemberManagement.vue"
-import MemberChange from "../components/management/MemberChange.vue"
 import OjtProduct from "../components/product/OjtProduct.vue"
 import ProductManagement from "../components/management/ProductManagement.vue"
 
@@ -32,7 +31,7 @@ const routes = [
     component: MyInfo
   },
   {
-    path: '/management/member/:position',
+    path: '/management/member/:name',
     name: 'memberManagement',
     component: MemberManagement
   },
@@ -49,14 +48,9 @@ const routes = [
   },
   //회원 관리
   {
-    path: '/management/product/:position',
+    path: '/management/product/:name',
     name: 'productManagement',
     component: ProductManagement
-  },
-  {
-    path: '/management/change/:position',
-    name: 'memberChange',
-    component: MemberChange
   }
 ]
 

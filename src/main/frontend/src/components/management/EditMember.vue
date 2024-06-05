@@ -2,16 +2,16 @@
   <!-- Modal -->
   <div
     class="modal fade"
-    id="addMemberModal"
+    id="eidtMemberModal"
     tabindex="-1"
-    aria-labelledby="addMemberModalLabel"
+    aria-labelledby="editMemberModal"
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="addMemberModalLabel">
-            <i class="bi bi-person-fill-add"></i> 사원 추가
+          <h1 class="modal-title fs-5" id="eidtMemberModal">
+            <i class="bi bi-person-fill-gear"></i> 사원 정보 수정
           </h1>
           <button
             type="button"
@@ -154,7 +154,7 @@
             </div>
           </div>
           <!-- 역할 부서 -->
-
+          <div>수정할 사용자 아이디 확인용 삭제 필요 : {{ editMemberNum }}</div>
           <!-- 모달 안 내용 -->
         </div>
         <div class="modal-footer">
@@ -165,13 +165,8 @@
           >
             닫기
           </button>
-          <button
-            type="button"
-            class="btn btn-outline-success"
-            @click="infoSubmit"
-            data-bs-dismiss="modal"
-          >
-            사원 추가
+          <button type="button" class="btn btn-outline-success">
+            수정 완료
           </button>
         </div>
       </div>
@@ -186,8 +181,11 @@ const phoneNumpattern =
   /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
 
 export default {
-  name: "addMember",
+  name: "editMember",
   components: {},
+  props: {
+    editMemberNum: Number,
+  },
   data() {
     return {
       memberInfo: {
@@ -238,5 +236,8 @@ export default {
   display: flex;
   gap: 50px;
   justify-content: flex-start;
+}
+h5 {
+  text-align: start;
 }
 </style>

@@ -33,7 +33,7 @@
         <ul class="d-flex navbar-nav">
           <li class="nav-item">
             <router-link
-              v-if="isLogin && position === '사용자'"
+              v-if="isLogin"
               class="nav-link"
               :to="`/myinfo/${userName}`"
               >내 정보</router-link
@@ -43,8 +43,8 @@
             <router-link
               v-if="isLogin && position === '관리자'"
               class="nav-link"
-              :to="`/management/member/${position}`"
-              >회원 정보</router-link
+              :to="`/management/member/${userName}`"
+              >사원 관리</router-link
             >
           </li>
           <li class="nav-item">

@@ -4,12 +4,12 @@
     <ul class="sidebar-nav">
       <div class="sidebar-brand"><i class="bi bi-gear"></i> 관리</div>
       <li>
-        <router-link :to="`/management/member/${position}`"
-          ><i class="bi bi-people-fill"></i> 회원 관리</router-link
+        <router-link :to="`/management/member/${userName}`"
+          ><i class="bi bi-people-fill"></i> 사원 관리</router-link
         >
       </li>
       <li>
-        <router-link :to="`/management/product/${position}`"
+        <router-link :to="`/management/product/${userName}`"
           ><i class="bi bi-boxes"></i> 제품 관리</router-link
         >
       </li>
@@ -27,6 +27,7 @@ export default {
   data() {
     return {
       isLogin: true,
+      userName: "bob",
       position: "관리자",
     };
   },

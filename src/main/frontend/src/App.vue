@@ -22,6 +22,9 @@ export default {
 .warning {
   color: red;
 }
+.pass {
+  color: blue;
+}
 #container {
   display: flex;
   flex-direction: column;
