@@ -1,26 +1,34 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="container">
+    <VueNav />
+    <router-view />
+    <VueFooter id="footer" />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import VueNav from "./components/VueNav.vue";
+import VueFooter from "./components/VueFooter.vue";
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    VueNav,
+    VueFooter,
+  },
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.warning {
+  color: red;
+}
+#container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* viewport의 전체 높이를 차지 */
+}
+
+#footer {
+  margin-top: auto; /* footer를 #app의 맨 아래로 보냄 */
 }
 </style>
