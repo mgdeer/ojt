@@ -4,9 +4,8 @@ import java.util.List;
 
 import com.example.demo.SHA256;
 import com.example.demo.entity.Member;
-import com.example.demo.dto.UserInfoForm;
+import com.example.demo.dto.UserCreateForm;
 import com.example.demo.repository.MemberRepository;
-import jakarta.persistence.EntityManager;
 //import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,7 @@ public class MemberServiceImpl implements MemberService {
     private final SHA256 sha256;
 
     @Override
-    public ResponseEntity<String> signup(UserInfoForm userCreateForm) {
+    public ResponseEntity<String> signup(UserCreateForm userCreateForm) {
 //        if(!userCreateForm.getPassword().equals(userCreateForm.getPasswordConfirm())){
 //            return ResponseEntity.badRequest().body("Passwords do not match");
 //        }

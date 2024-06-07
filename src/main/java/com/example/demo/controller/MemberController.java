@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.UserInfoForm;
+import com.example.demo.dto.UserCreateForm;
 import com.example.demo.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> signup(@RequestBody UserInfoForm userCreateForm) {
+    public ResponseEntity<String> signup(@RequestBody UserCreateForm userCreateForm) {
         return memberService.signup(userCreateForm);
     }
 }

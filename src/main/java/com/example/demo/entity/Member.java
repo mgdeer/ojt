@@ -42,4 +42,6 @@ public class Member extends BaseTimeEntity{
     @ColumnDefault("'o'")
     private String temp;
 
+    private int salary;
+
 }
