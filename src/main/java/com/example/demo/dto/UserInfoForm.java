@@ -6,13 +6,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserCreateForm {
-//    private String id;
+public class UserInfoForm {
+    private Long id;
     private String name;
     private String email;
-    //private String password;
+    private String password;
     //private String passwordConfirm;
     private Role role;
     private String nickname;
     private String department;
+    private String phone;
 }
