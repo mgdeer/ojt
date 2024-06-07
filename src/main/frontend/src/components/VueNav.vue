@@ -5,7 +5,13 @@
     class="navbar navbar-expand-lg navbar-dark bg-dark"
   >
     <div class="container-fluid">
-      <router-link class="navbar-brand" to="/"
+      <router-link
+        class="navbar-brand"
+        v-if="isLogin"
+        :to="`/${userInfo.userName}`"
+        ><span>OJT Project</span></router-link
+      >
+      <router-link class="navbar-brand" v-else to="/"
         ><span>OJT Project</span></router-link
       >
       <button
@@ -19,31 +25,56 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
+      <!-- 왼쪽 네비 링크 -->
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <router-link class="nav-link active" aria-current="page" to="/"
+            <router-link
+              class="nav-link active"
+              aria-current="page"
+              v-if="isLogin"
+              :to="`/${userInfo.userName}`"
+              >Home</router-link
+            >
+            <router-link
+              class="nav-link active"
+              aria-current="page"
+              v-else
+              to="/"
               >Home</router-link
             >
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/product">제품 정보</router-link>
+            <router-link
+              class="nav-link"
+              v-if="isLogin"
+              :to="`/product/${userInfo.userName}`"
+              >제품 정보</router-link
+            >
+            <router-link class="nav-link" v-else to="/product"
+              >제품 정보</router-link
+            >
           </li>
         </ul>
+        <!-- 왼쪽 네비 링크 -->
+        <!-- 오른쪽 네비 링크 -->
         <ul class="d-flex navbar-nav">
           <li class="nav-item">
             <router-link
               v-if="isLogin"
               class="nav-link"
-              :to="`/myinfo/${userName}`"
+              :to="`/myinfo/${userInfo.userName}`"
               >내 정보</router-link
             >
           </li>
           <li class="nav-item">
             <router-link
-              v-if="isLogin && position === '관리자'"
+              v-if="
+                userInfo.position === '관리자' ||
+                userInfo.position === '최고 관리자'
+              "
               class="nav-link"
-              :to="`/management/member/${userName}`"
+              :to="`/management/member/${userInfo.userName}`"
               >사원 관리</router-link
             >
           </li>
@@ -67,28 +98,52 @@
             </button>
           </li>
         </ul>
+        <!-- 오른쪽 네비 링크 -->
       </div>
     </div>
   </nav>
 </template>
 <script>
 import LoginModal from "./LoginModal.vue";
+// 로그인한 유저 정보
+const user = JSON.parse(sessionStorage.getItem("setUser"));
+
 export default {
   name: "VueNav",
   data() {
     return {
-      userName: "bob",
-      isLogin: true,
-      position: "관리자",
+      isLogin: false,
+      userInfo: {
+        userId: "",
+        userName: "",
+        position: "",
+      },
     };
   },
   components: {
     LoginModal,
   },
   methods: {
+    //로그아웃 클릭시 메소드
     logout() {
       console.log("로그아웃");
+      sessionStorage.removeItem("setUser");
+      this.isLogin = false;
+      this.userInfo.userId = "";
+      this.userInfo.userName = "";
+      this.userInfo.position = "";
+      window.location.href = `/`;
     },
+  },
+  mounted() {
+    //로그인 정보 관리
+    if (user !== null) {
+      this.isLogin = true;
+      this.userInfo.userId = user.userId;
+      this.userInfo.userName = user.userName;
+      this.userInfo.position = user.position;
+    }
+    console.log("유져", user);
   },
 };
 </script>

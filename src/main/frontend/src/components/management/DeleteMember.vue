@@ -3,6 +3,8 @@
   <div
     class="modal fade"
     id="deleteMemberModal"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
     tabindex="-1"
     aria-labelledby="deleteMemberModalLabal"
     aria-hidden="true"
@@ -34,7 +36,14 @@
           >
             닫기
           </button>
-          <button type="button" class="btn btn-outline-danger">삭제</button>
+          <button
+            type="button"
+            class="btn btn-outline-danger"
+            data-bs-dismiss="modal"
+            @click="deleteUser"
+          >
+            삭제
+          </button>
         </div>
       </div>
     </div>
@@ -47,6 +56,12 @@ export default {
   props: {
     deleteMemberNum: Number,
     deleteMemberName: String,
+  },
+  methods: {
+    deleteUser() {
+      //백엔드 연동 필요
+      console.log("삭제 할 유저 아이디", this.deleteMemberNum);
+    },
   },
 };
 </script>

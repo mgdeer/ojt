@@ -1,9 +1,124 @@
 <template>
-  <div>마이 인포</div>
+  <div class="myInfo">
+    <div class="myInfoContents">
+      <div class="myInfoTitle"><i class="bi bi-person-circle"></i>내 정보</div>
+      <div class="infoTexts">
+        <i class="bi bi-person-fill"></i>{{ userInfo.userName }}
+      </div>
+      <div class="infoRow">
+        <div>
+          <div class="infoTexts">
+            <i class="bi bi-person-badge-fill"></i>{{ userInfo.position }}
+          </div>
+        </div>
+        <div>
+          <div class="infoTexts">
+            <i class="bi bi-person-workspace"></i>{{ userInfo.department }}
+          </div>
+        </div>
+        <div>
+          <div class="infoTexts">
+            <i class="bi bi-cash"></i>{{ userInfo.salary }}만원
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="infoTexts">
+          <i class="bi bi-envelope-at-fill"></i>{{ userInfo.email }}
+        </div>
+      </div>
+      <div>
+        <div class="infoTexts">
+          <i class="bi bi-phone-fill"></i>{{ userInfo.phoneNum }}
+        </div>
+      </div>
+      <!-- 버튼 -->
+      <div class="myInfoBtns">
+        <button
+          type="button"
+          class="btn btn-outline-warning myInfoBtn"
+          data-bs-toggle="modal"
+          data-bs-target="#editMyinfoModal"
+        >
+          정보 수정
+        </button>
+        <EditMyInfo />
+        <button
+          type="button"
+          class="btn btn-outline-warning myInfoBtn"
+          data-bs-toggle="modal"
+          data-bs-target="#editPasswdModal"
+        >
+          비밀 번호 변경
+        </button>
+        <EditPasswd />
+      </div>
+      <!-- 버튼 -->
+    </div>
+  </div>
 </template>
 <script>
+import EditMyInfo from "./EditMyInfo.vue";
+import EditPasswd from "./EditPasswd.vue";
+
 export default {
   name: "myInfo",
+  components: {
+    EditMyInfo,
+    EditPasswd,
+  },
+  data() {
+    return {
+      userInfo: {},
+    };
+  },
+  mounted() {
+    //로그인된 유저의 정보
+    if (JSON.parse(sessionStorage.getItem("setUser")) !== null) {
+      this.userInfo = JSON.parse(sessionStorage.getItem("setUser"));
+    }
+    console.log(this.userInfo);
+  },
 };
 </script>
-<style></style>
+<style>
+.myInfo {
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.myInfoTitle {
+  font-size: 30px;
+  padding: 10px 0;
+  border-bottom: 1px solid;
+}
+.myInfoContents {
+  margin: 20px auto;
+  gap: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.25), 0 5px 5px rgba(0, 0, 0, 0.22);
+}
+.bi {
+  margin-right: 5px;
+}
+.infoRow {
+  display: flex;
+  gap: 50px;
+}
+.infoTexts {
+  font-size: 18px;
+}
+.myInfoBtns {
+  display: flex;
+  justify-content: space-evenly;
+}
+.myInfoBtn {
+  color: black;
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.25), 0 5px 5px rgba(0, 0, 0, 0.22);
+}
+</style>

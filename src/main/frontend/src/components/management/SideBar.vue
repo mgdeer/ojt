@@ -26,10 +26,14 @@ export default {
   components: {},
   data() {
     return {
-      isLogin: true,
-      userName: "bob",
-      position: "관리자",
+      userName: "",
     };
+  },
+  mounted() {
+    //로그인된 유저 정보
+    JSON.parse(sessionStorage.getItem("setUser")) !== null
+      ? (this.userName = JSON.parse(sessionStorage.getItem("setUser")).userName)
+      : (this.userName = "");
   },
 };
 </script>

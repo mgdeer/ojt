@@ -2,18 +2,18 @@
   <!-- Modal -->
   <div
     class="modal fade"
-    id="addMemberModal"
+    id="editMyinfoModal"
     data-bs-backdrop="static"
     data-bs-keyboard="false"
     tabindex="-1"
-    aria-labelledby="addMemberModalLabel"
+    aria-labelledby="editMyinfoModal"
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="addMemberModalLabel">
-            <i class="bi bi-person-fill-add"></i> 사원 추가
+          <h1 class="modal-title fs-5" id="editMyinfoModal">
+            <i class="bi bi-person-fill-gear"></i> 내 정보 수정
           </h1>
           <button
             type="button"
@@ -82,90 +82,6 @@
               <p class="warning" v-else>사용 불가능한 번호</p>
             </div>
           </div>
-          <!-- 유효값 경고 -->
-          <h5>연봉(단위 만원)</h5>
-          <div class="input-group" style="margin-bottom: 40px">
-            <span class="input-group-text" id="basic-addon4"
-              ><i class="bi bi-cash"></i
-            ></span>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="연봉을 입력해주세요"
-              aria-label="Usersalary"
-              aria-describedby="basic-addon4"
-              v-model="memberInfo.salary"
-            />
-          </div>
-          <!-- 역할 부서 -->
-          <div class="dropdowns" style="margin-bottom: 40px">
-            <div class="dropdownBox">
-              <h5>역할</h5>
-              <div class="dropdown">
-                <button
-                  class="btn btn-outline-secondary dropdown-toggle"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i class="bi bi-person-badge-fill"></i> 역할 :
-                  {{ memberInfo.position }}
-                </button>
-                <ul class="dropdown-menu">
-                  <li>
-                    <div
-                      v-if="loginedPosion === '최고 관리자'"
-                      class="dropdown-item"
-                      @click="setPosition('관리자')"
-                    >
-                      관리자
-                    </div>
-                  </li>
-                  <li>
-                    <div class="dropdown-item" @click="setPosition('사원')">
-                      사원
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="dropdownBox">
-              <h5>부서</h5>
-              <div class="dropdown">
-                <button
-                  class="btn btn-outline-secondary dropdown-toggle"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i class="bi bi-person-workspace"></i> 부서 :
-                  {{ memberInfo.department }}
-                </button>
-                <ul class="dropdown-menu">
-                  <li>
-                    <div class="dropdown-item" @click="setDepartment('영업')">
-                      영업
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      class="dropdown-item"
-                      @click="setDepartment('프론트엔드')"
-                    >
-                      프론트엔드
-                    </div>
-                  </li>
-                  <li>
-                    <div class="dropdown-item" @click="setDepartment('백엔드')">
-                      백엔드
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <!-- 역할 부서 -->
-          <!-- 유효값 경고 -->
           <div v-if="!inputCheck" class="warning">입력 값을 확인해주세요.</div>
           <!-- 유효값 경고 -->
           <!-- 모달 안 내용 -->
@@ -182,9 +98,9 @@
           <button
             type="button"
             class="btn btn-outline-success"
-            @click="infoSubmit"
+            @click="myInfoSubmit"
           >
-            사원 추가
+            수정 완료
           </button>
         </div>
       </div>
@@ -197,11 +113,9 @@
 const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/;
 const phoneNumpattern =
   /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
-//세션의 로그인된 유저 정보
-const user = JSON.parse(sessionStorage.getItem("setUser"));
 
 export default {
-  name: "addMember",
+  name: "editMyInfo",
   components: {},
   data() {
     return {
@@ -217,24 +131,19 @@ export default {
         createDate: "",
         editeDate: "",
       },
-      loginedPosion: "",
       inputCheck: true,
     };
   },
   methods: {
-    //추가 버튼 눌렀을 때 메소드
-    infoSubmit() {
+    //내정보 수정 메소드
+    myInfoSubmit() {
       if (
         this.memberInfo.name.length > 0 &&
-        this.memberInfo.salary.length > 0 &&
-        this.memberInfo.position.length > 0 &&
-        this.memberInfo.department.length > 0 &&
         this.emailValidChk &&
         this.telValidChk
       ) {
         console.log(this.memberInfo);
         //데이터 전송 필요.
-        //인풋 폼 리셋
         this.memberInfo = {
           id: 0,
           passwd: "",
@@ -247,16 +156,22 @@ export default {
           createDate: "",
           editeDate: "",
         };
-        window.location.href = `/management/member/${
+        window.location.href = `/myinfo/${
           JSON.parse(sessionStorage.getItem("setUser")).userName
         }`;
       } else {
         this.inputCheck = false;
       }
     },
-    //닫기 버튼 눌렀을 때 메소드
+    // 역할 값 메소드
+    setPosition(v) {
+      this.memberInfo.position = v;
+    },
+    // 부서 값 메소드
+    setDepartment(v) {
+      this.memberInfo.department = v;
+    },
     reset() {
-      this.inputCheck = true;
       this.memberInfo = {
         id: 0,
         passwd: "",
@@ -270,17 +185,9 @@ export default {
         editeDate: "",
       };
     },
-    // 역할 값 메소드
-    setPosition(v) {
-      this.memberInfo.position = v;
-    },
-    // 부서 값 메소드
-    setDepartment(v) {
-      this.memberInfo.department = v;
-    },
   },
   computed: {
-    // 이메일 인풋 유효성 검사
+    //이메일 유효성 검사
     emailValidChk() {
       if (emailPattern.test(this.memberInfo.email) === false) {
         return false;
@@ -288,7 +195,7 @@ export default {
         return true;
       }
     },
-    // 전화번호 인풋 유효성 검사
+    //번호 유효성 검사
     telValidChk() {
       if (phoneNumpattern.test(this.memberInfo.phoneNum) === false) {
         return false;
@@ -297,10 +204,6 @@ export default {
       }
     },
   },
-  mounted() {
-    //로그인된 유저의 포지션
-    this.loginedPosion = user.position;
-  },
 };
 </script>
 <style>
@@ -308,5 +211,8 @@ export default {
   display: flex;
   gap: 50px;
   justify-content: flex-start;
+}
+h5 {
+  text-align: start;
 }
 </style>

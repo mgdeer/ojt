@@ -2,7 +2,9 @@
   <!-- Modal -->
   <div
     class="modal fade"
-    id="eidtMemberModal"
+    id="editMemberModal"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
     tabindex="-1"
     aria-labelledby="editMemberModal"
     aria-hidden="true"
@@ -10,7 +12,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="eidtMemberModal">
+          <h1 class="modal-title fs-5" id="editMemberModal">
             <i class="bi bi-person-fill-gear"></i> 사원 정보 수정
           </h1>
           <button
@@ -18,6 +20,7 @@
             class="btn-close"
             data-bs-dismiss="modal"
             aria-label="Close"
+            @click="reset"
           ></button>
         </div>
         <div class="modal-body">
@@ -50,12 +53,14 @@
               v-model="memberInfo.email"
             />
           </div>
+          <!-- 유효값 경고 -->
           <div style="height: 40px">
             <div v-show="memberInfo.email.length > 0">
               <p class="pass" v-if="emailValidChk">사용 가능한 이메일</p>
               <p class="warning" v-else>사용 불가능한 이메일</p>
             </div>
           </div>
+          <!-- 유효값 경고 -->
           <h5>전화 번호</h5>
           <div class="input-group">
             <span class="input-group-text" id="basic-addon3"
@@ -70,12 +75,14 @@
               v-model="memberInfo.phoneNum"
             />
           </div>
+          <!-- 유효값 경고 -->
           <div style="height: 40px">
             <div v-show="memberInfo.phoneNum.length > 0">
               <p class="pass" v-if="telValidChk">사용 가능한 번호</p>
               <p class="warning" v-else>사용 불가능한 번호</p>
             </div>
           </div>
+          <!-- 유효값 경고 -->
           <h5>연봉(단위 만원)</h5>
           <div class="input-group" style="margin-bottom: 40px">
             <span class="input-group-text" id="basic-addon4"
@@ -106,7 +113,11 @@
                 </button>
                 <ul class="dropdown-menu">
                   <li>
-                    <div class="dropdown-item" @click="setPosition('관리자')">
+                    <div
+                      v-if="loginedPosion === '최고 관리자'"
+                      class="dropdown-item"
+                      @click="setPosition('관리자')"
+                    >
                       관리자
                     </div>
                   </li>
@@ -154,6 +165,9 @@
             </div>
           </div>
           <!-- 역할 부서 -->
+          <!-- 유효값 경고 -->
+          <div v-if="!inputCheck" class="warning">입력 값을 확인해주세요.</div>
+          <!-- 유효값 경고 -->
           <div>수정할 사용자 아이디 확인용 삭제 필요 : {{ editMemberNum }}</div>
           <!-- 모달 안 내용 -->
         </div>
@@ -162,10 +176,15 @@
             type="button"
             class="btn btn-outline-secondary"
             data-bs-dismiss="modal"
+            @click="reset"
           >
             닫기
           </button>
-          <button type="button" class="btn btn-outline-success">
+          <button
+            type="button"
+            class="btn btn-outline-success"
+            @click="infoSubmit"
+          >
             수정 완료
           </button>
         </div>
@@ -179,6 +198,9 @@
 const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/;
 const phoneNumpattern =
   /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
+
+//세션의 로그인된 유저 정보
+const user = JSON.parse(sessionStorage.getItem("setUser"));
 
 export default {
   name: "editMember",
@@ -200,20 +222,71 @@ export default {
         createDate: "",
         editeDate: "",
       },
+      inputCheck: true,
+      loginedPosion: "",
     };
   },
   methods: {
+    //수정 버튼 눌렀을 때 메소드
     infoSubmit() {
-      console.log(this.memberInfo);
+      if (
+        this.memberInfo.name.length > 0 &&
+        this.memberInfo.salary.length > 0 &&
+        this.memberInfo.position.length > 0 &&
+        this.memberInfo.department.length > 0 &&
+        this.emailValidChk &&
+        this.telValidChk
+      ) {
+        console.log(this.memberInfo);
+        //데이터 전송 필요.
+        //인풋 폼 리셋
+        this.memberInfo = {
+          id: 0,
+          passwd: "",
+          name: "",
+          email: "",
+          phoneNum: "",
+          salary: "",
+          position: "",
+          department: "",
+          createDate: "",
+          editeDate: "",
+        };
+        window.location.href = `/management/member/${
+          JSON.parse(sessionStorage.getItem("setUser")).userName
+        }`;
+      } else {
+        this.inputCheck = false;
+      }
     },
+    // 역할 값 메소드
     setPosition(v) {
       this.memberInfo.position = v;
     },
+    // 부서 값 메소드
     setDepartment(v) {
       this.memberInfo.department = v;
     },
+    //닫기 버튼 눌렀을 때 메소드
+    reset() {
+      this.inputCheck = true;
+      //받아온 기본 값으로 변경
+      this.memberInfo = {
+        id: 0,
+        passwd: "",
+        name: "",
+        email: "",
+        phoneNum: "",
+        salary: "",
+        position: "",
+        department: "",
+        createDate: "",
+        editeDate: "",
+      };
+    },
   },
   computed: {
+    // 이메일 인풋 유효성 검사
     emailValidChk() {
       if (emailPattern.test(this.memberInfo.email) === false) {
         return false;
@@ -221,6 +294,7 @@ export default {
         return true;
       }
     },
+    // 번호 인풋 유효성 검사
     telValidChk() {
       if (phoneNumpattern.test(this.memberInfo.phoneNum) === false) {
         return false;
@@ -228,6 +302,10 @@ export default {
         return true;
       }
     },
+  },
+  mounted() {
+    //로그인된 유저의 포지션
+    this.loginedPosion = user.position;
   },
 };
 </script>

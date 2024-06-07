@@ -1,4 +1,5 @@
 <template>
+  <!-- 캐러샐 -->
   <div
     id="carouselExampleAutoplaying"
     class="carousel slide"
@@ -52,6 +53,7 @@
       <span class="visually-hidden">Next</span>
     </button>
   </div>
+  <!-- 캐러샐 -->
 </template>
 <script>
 export default {

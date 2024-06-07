@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import OjtMain from "../components/OjtMain.vue"
 import MyInfo from "../components/myInfo/MyInfo.vue"
-import MyInfoChange from "../components/myInfo/MyInfoChange.vue"
-import PwChange from "../components/myInfo/PwChange.vue"
 import MemberManagement from "../components/management/MemberManagement.vue"
 import OjtProduct from "../components/product/OjtProduct.vue"
 import ProductManagement from "../components/management/ProductManagement.vue"
@@ -24,6 +22,11 @@ const routes = [
     name: 'ojtProduct',
     component: OjtProduct
   },
+  {
+    path: '/product/:name',
+    name: 'ojtProductLogined',
+    component: OjtProduct
+  },
   //로그인한 유저의 직책에 따라 나뉨
   {
     path: '/myinfo/:name',
@@ -34,17 +37,6 @@ const routes = [
     path: '/management/member/:name',
     name: 'memberManagement',
     component: MemberManagement
-  },
-  //마이인포 사이드바
-  {
-    path: '/myinfo/change/:name',
-    name: 'myInfoChange',
-    component: MyInfoChange
-  },
-  {
-    path: '/myinfo/pwchange/:name',
-    name: 'pwChange',
-    component: PwChange
   },
   //회원 관리
   {
