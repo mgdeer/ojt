@@ -88,8 +88,8 @@ export default {
       isValid: false,
       userInfo: {
         userId: 20240001,
-        userName: "bob",
-        position: "관리자",
+        userName: "박현수",
+        position: "최고 관리자",
         email: "gustn400@naver.com",
         phoneNum: "010-4435-5724",
         salary: 6000,

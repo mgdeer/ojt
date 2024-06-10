@@ -89,7 +89,7 @@
               ><i class="bi bi-cash"></i
             ></span>
             <input
-              type="text"
+              type="number"
               class="form-control"
               placeholder="연봉을 입력해주세요"
               aria-label="Usersalary"
@@ -200,6 +200,7 @@ const phoneNumpattern =
   /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
 //세션의 로그인된 유저 정보
 const user = JSON.parse(sessionStorage.getItem("setUser"));
+const api = "http://localhost:8080";
 
 export default {
   name: "addMember",
@@ -207,16 +208,12 @@ export default {
   data() {
     return {
       memberInfo: {
-        id: 0,
-        passwd: "",
         name: "",
         email: "",
         phoneNum: "",
-        salary: "",
+        salary: 0,
         position: "",
         department: "",
-        createDate: "",
-        editeDate: "",
       },
       loginedPosion: "",
       inputCheck: true,
@@ -227,7 +224,7 @@ export default {
     infoSubmit() {
       if (
         this.memberInfo.name.length > 0 &&
-        this.memberInfo.salary.length > 0 &&
+        this.memberInfo.salary > 0 &&
         this.memberInfo.position.length > 0 &&
         this.memberInfo.department.length > 0 &&
         this.emailValidChk &&
@@ -235,38 +232,37 @@ export default {
       ) {
         console.log(this.memberInfo);
         axios
-          .post("/create", {
-            id: "",
-            name: "박현수",
-            email: "",
-            password: "",
-            role: "",
-            nickname: "",
-            department: "",
+          .post(`${api}/create`, {
+            name: this.memberInfo.name,
+            role: this.memberInfo.position,
+            department: this.memberInfo.department,
+            email: this.memberInfo.email,
+            phone: this.memberInfo.phoneNum,
+            salary: this.memberInfo.salary,
           })
           .then(function (response) {
             console.log(response);
+            //인풋 폼 리셋
+            this.memberInfo = {
+              id: 0,
+              passwd: "",
+              name: "",
+              email: "",
+              phoneNum: "",
+              salary: "",
+              position: "",
+              department: "",
+              createDate: "",
+              editeDate: "",
+            };
+            // window.location.href = `/management/member/${
+            //   JSON.parse(sessionStorage.getItem("setUser")).userName
+            // }`;
           })
           .catch(function (error) {
             console.log(error);
           });
         //데이터 전송 필요.
-        //인풋 폼 리셋
-        this.memberInfo = {
-          id: 0,
-          passwd: "",
-          name: "",
-          email: "",
-          phoneNum: "",
-          salary: "",
-          position: "",
-          department: "",
-          createDate: "",
-          editeDate: "",
-        };
-        window.location.href = `/management/member/${
-          JSON.parse(sessionStorage.getItem("setUser")).userName
-        }`;
       } else {
         this.inputCheck = false;
       }
