@@ -192,6 +192,7 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 // 정규식 에러 해결
 // eslint-disable-next-line
 const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/;
@@ -233,6 +234,22 @@ export default {
         this.telValidChk
       ) {
         console.log(this.memberInfo);
+        axios
+          .post("/create", {
+            id: "",
+            name: "박현수",
+            email: "",
+            password: "",
+            role: "",
+            nickname: "",
+            department: "",
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
         //데이터 전송 필요.
         //인풋 폼 리셋
         this.memberInfo = {
