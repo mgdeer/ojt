@@ -24,7 +24,7 @@ public class Member extends BaseTimeEntity{
     private String email;
 
     @Column(nullable = false)
-    private String phoneNumber;
+    private String phone;
 
     @Column
     private String nickname;
@@ -41,6 +41,6 @@ public class Member extends BaseTimeEntity{
 
     private int salary;
 
-    private String phone;
+
 
 }
