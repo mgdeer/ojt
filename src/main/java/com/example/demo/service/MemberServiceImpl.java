@@ -43,7 +43,7 @@ public class MemberServiceImpl implements MemberService {
 //        if(!userCreateForm.getPassword().equals(userCreateForm.getPasswordConfirm())){
 //            return ResponseEntity.badRequest().body("Passwords do not match");
 //        }
-        System.out.println("this is signup method");
+
         try {
             LocalDate now = LocalDate.now();
             String count = memberRepository.makeId();
@@ -172,5 +172,10 @@ public class MemberServiceImpl implements MemberService {
             existingMember.setName(member.getName());
             memberRepository.save(existingMember);
         }
+    }
+
+    @Override
+    public boolean emailCheck(String email) {
+        return !memberRepository.existsByEmail(email);
     }
 }

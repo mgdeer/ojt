@@ -28,5 +28,5 @@ public interface MemberService {
     void delete(Long id);
     void updateMyInfo(Member member);
 
-
+    boolean emailCheck(String email);
 }
