@@ -13,7 +13,6 @@ import org.hibernate.annotations.ColumnDefault;
 @Builder
 public class Member extends BaseTimeEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
