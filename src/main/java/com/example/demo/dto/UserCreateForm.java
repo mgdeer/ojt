@@ -9,6 +9,5 @@ import lombok.Setter;
 public class UserCreateForm {
     private String name;
     private Role role;
-    private String nickname;
     private String department;
 }
