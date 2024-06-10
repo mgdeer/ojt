@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.Helper;
+
+import java.time.LocalDate;
 import java.util.List;
 
 import com.example.demo.SHA256;
@@ -38,7 +40,6 @@ public class MemberServiceImpl implements MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     private final MemberRepository memberRepository;
-    //    private final EntityManager entityManager;
     private final SHA256 sha256;
 
     @Override
@@ -47,10 +48,12 @@ public class MemberServiceImpl implements MemberService {
 //            return ResponseEntity.badRequest().body("Passwords do not match");
 //        }
         try {
+            LocalDate now = LocalDate.now();
+            String count = memberRepository.makeId();
+            String newId = now.getYear() + "0".repeat(5-count.length()) + count;
             String encryptedPassword = sha256.encrypt("multiojt19");
-            Long newId = Long.parseLong(memberRepository.makeId());
             Member member = Member.builder()
-                    .id(newId)
+                    .id(Long.parseLong(newId))
                     .password(encryptedPassword)
                     .department(userCreateForm.getDepartment())
                     .name(userCreateForm.getName())
@@ -165,41 +168,4 @@ public class MemberServiceImpl implements MemberService {
             memberRepository.save(existingMember);
         }
     }
-
-//    @Override
-//    @Transactional
-//    public ResponseEntity<String> update(UserInfoForm userInfoForm) {
-//        try{
-//            String encryptedPassword = sha256.encrypt(userInfoForm.getPassword());
-//            Member member = entityManager.find(Member.class, userInfoForm.getId());
-//            if (!member.getPassword().equals(encryptedPassword)) {
-//                member.setPassword(encryptedPassword);
-//            }
-//            if (!member.getDepartment().equals(userInfoForm.getDepartment())) {
-//                member.setDepartment(userInfoForm.getDepartment());
-//            }
-//            if (!member.getName().equals(userInfoForm.getName())) {
-//                member.setName(userInfoForm.getName());
-//            }
-//            if (!member.getRole().equals(userInfoForm.getRole())) {
-//                member.setRole(userInfoForm.getRole());
-//            }
-//            if (!member.getEmail().equals(userInfoForm.getEmail())) {
-//                member.setEmail(userInfoForm.getEmail());
-//            }
-//            if (!member.getPhoneNumber().equals(userInfoForm.getPhone())) {
-//                member.setPhoneNumber(userInfoForm.getPhone());
-//            }
-//            if (!member.getNickname().equals(userInfoForm.getNickname())) {
-//                member.setNickname(userInfoForm.getNickname());
-//            }
-//            if(member.getTemp().equals("o")){
-//                member.setTemp("x");
-//            }
-//            return ResponseEntity.ok("Update successful");
-//        } catch (Exception e){
-//            log.error("Update failed", e);
-//            return ResponseEntity.status(500).body("Update failed");
-//        }
-//    }
 }

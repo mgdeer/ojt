@@ -6,7 +6,6 @@ import com.example.demo.dto.TokenRequestDto;
 import com.example.demo.jwt.TokenDto;
 import com.example.demo.service.MemberService;
 import com.example.demo.dto.UserCreateForm;
-import com.example.demo.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
