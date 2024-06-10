@@ -24,7 +24,6 @@ public class MemberResponseDto {
         dto.setEmail(member.getEmail());
         dto.setPassword(member.getPassword());
         dto.setRole(member.getRole());
-        dto.setNickname(member.getNickname());
         dto.setDepartment(member.getDepartment());
         return dto;
     }
