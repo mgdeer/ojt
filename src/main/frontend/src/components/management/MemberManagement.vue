@@ -32,18 +32,7 @@
             :backNum="backNum"
           />
           <div class="stick">
-            <div class="chart">
-              <div>
-                <div>
-                  <apexchart
-                    type="line"
-                    height="350"
-                    :options="chartOptions"
-                    :series="series"
-                  ></apexchart>
-                </div>
-              </div>
-            </div>
+            <StickChart class="chart" :userNumYears="userNumYears" />
             <DistributedColumns
               class="chart"
               :salesSalaryAvg="salesSalaryAvg"
@@ -458,63 +447,22 @@
 </template>
 <script>
 import SideBar from "./SideBar.vue";
-import VueApexCharts from "vue3-apexcharts";
 import AddMember from "./AddMember.vue";
 import EditMember from "./EditMember.vue";
 import DeleteMember from "./DeleteMember.vue";
 import SimpleDonut from "./SimpleDonut.vue";
 import DistributedColumns from "./DistributedColumns.vue";
-
+import StickChart from "./StickChart.vue";
+//로그인 유져 확인
 const user = JSON.parse(sessionStorage.getItem("setUser"));
 
 export default {
   name: "memberManagement",
   data() {
     return {
-      //라인 차트
-      series: [
-        {
-          name: "사원",
-          data: [0, 0, 0, 0, 0],
-        },
-      ],
-      chartOptions: {
-        chart: {
-          height: 350,
-          type: "line",
-          zoom: {
-            enabled: false,
-          },
-        },
-        title: {
-          text: "사원 증감 추세",
-          style: {
-            fontSize: "22px",
-            fontWeight: "bold",
-          },
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          curve: "straight",
-        },
-        grid: {
-          row: {
-            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-            opacity: 0.5,
-          },
-        },
-        yaxis: {
-          min: 0,
-          max: 10,
-        },
-        xaxis: {
-          categories: ["2020", "2021", "2022", "2023", "2024"],
-        },
-      },
+      //라인 차트 값
       userNumYears: [0, 0, 0, 0, 0],
-      //라인 차트
+      //라인 차트 값
       loginedPosion: "",
       editMemberNum: "",
       deleteMemberNum: "",
@@ -794,7 +742,7 @@ export default {
     DeleteMember,
     SimpleDonut,
     DistributedColumns,
-    apexchart: VueApexCharts,
+    StickChart,
   },
   methods: {
     //이름 검색 메소드
@@ -1148,7 +1096,6 @@ export default {
       this.members[i].createDate.slice(0, 4) === "2024" &&
         this.userNumYears[4]++;
     }
-    this.series = [{ name: "사원", data: this.userNumYears }];
     //리스트 세팅
     this.setList();
     //로그인된 사람의 역할

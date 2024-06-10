@@ -116,16 +116,13 @@
                     <div
                       v-if="loginedPosion === '최고 관리자'"
                       class="dropdown-item"
-                      @click="setPosition('ROLE_ADMINISTRATOR')"
+                      @click="setPosition('관리자')"
                     >
                       관리자
                     </div>
                   </li>
                   <li>
-                    <div
-                      class="dropdown-item"
-                      @click="setPosition('ROLE_USER')"
-                    >
+                    <div class="dropdown-item" @click="setPosition('사원')">
                       사원
                     </div>
                   </li>
@@ -195,14 +192,19 @@
   </div>
 </template>
 <script>
+//엑시오스 임포트
 import axios from "axios";
+
 // 정규식 에러 해결
 // eslint-disable-next-line
 const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/;
 const phoneNumpattern =
   /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
+
 //세션의 로그인된 유저 정보
 const user = JSON.parse(sessionStorage.getItem("setUser"));
+
+//엑시오스 주소
 const api = "http://localhost:8080";
 
 export default {
@@ -237,7 +239,10 @@ export default {
         axios
           .post(`${api}/member/create`, {
             name: this.memberInfo.name,
-            role: this.memberInfo.position,
+            role:
+              this.memberInfo.position === "관리자"
+                ? "ROLE_ADMINISTRATOR"
+                : "ROLE_USER",
             department: this.memberInfo.department,
             email: this.memberInfo.email,
             phone: this.memberInfo.phoneNum,
@@ -245,18 +250,9 @@ export default {
           })
           .then(function (response) {
             console.log(response);
-            //인풋 폼 리셋
-            this.memberInfo = {
-              name: "",
-              email: "",
-              phoneNum: "",
-              salary: 0,
-              position: "",
-              department: "",
-            };
-            // window.location.href = `/management/member/${
-            //   JSON.parse(sessionStorage.getItem("setUser")).userName
-            // }`;
+            window.location.href = `/management/member/${
+              JSON.parse(sessionStorage.getItem("setUser")).userName
+            }`;
           })
           .catch(function (error) {
             console.log(error);
