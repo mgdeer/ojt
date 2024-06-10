@@ -12,7 +12,10 @@ import lombok.*;
 @Builder
 public class Member extends BaseTimeEntity{
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long realId;
+
+    private String id;
 
     @Column(nullable = false)
     private String name;
@@ -25,9 +28,6 @@ public class Member extends BaseTimeEntity{
 
     @Column(nullable = false)
     private String phone;
-
-    @Column
-    private String nickname;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

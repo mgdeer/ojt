@@ -6,11 +6,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.example.demo.SHA256;
-import com.example.demo.dto.MemberRequestDto;
-import com.example.demo.dto.MemberResponseDto;
-import com.example.demo.dto.TokenRequestDto;
+import com.example.demo.dto.*;
 import com.example.demo.entity.Member;
-import com.example.demo.dto.UserCreateForm;
 import com.example.demo.entity.RefreshToken;
 import com.example.demo.jwt.TokenDto;
 import com.example.demo.jwt.TokenProvider;
@@ -47,24 +44,24 @@ public class MemberServiceImpl implements MemberService {
 //            return ResponseEntity.badRequest().body("Passwords do not match");
 //        }
         System.out.println("this is signup method");
-        System.out.println(userCreateForm.getDepartment());
         try {
             LocalDate now = LocalDate.now();
             String count = memberRepository.makeId();
             String newId = now.getYear() + "0".repeat(5-count.length()) + count;
+            System.out.println(newId);
             String encryptedPassword = sha256.encrypt("multiojt19");
             Member member = Member.builder()
                     .salary(userCreateForm.getSalary())
-                    .id(Long.parseLong(newId))
+                    .realId(newId)
                     .password(encryptedPassword)
                     .department(userCreateForm.getDepartment())
                     .email(userCreateForm.getEmail())
                     .name(userCreateForm.getName())
-                    .nickname("_")
                     .phone(userCreateForm.getPhone())
                     .temp("o")
                     .role(userCreateForm.getRole())
                     .build();
+            System.out.println(member.getId());
             memberRepository.save(member);
             System.out.println("Successfully registered member");
             return ResponseEntity.ok("Signup successful");
