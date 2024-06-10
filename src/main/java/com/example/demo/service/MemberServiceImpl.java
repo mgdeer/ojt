@@ -81,7 +81,8 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public TokenDto login(HttpServletRequest request, MemberRequestDto memberRequestDto) {
 
-        memberRequestDto.setPassword(memberRequestDto.getEmail()+memberRequestDto.getPassword());
+//        memberRequestDto.setPassword(memberRequestDto.getEmail()+memberRequestDto.getPassword());
+        memberRequestDto.setPassword(memberRequestDto.getPassword());
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberRequestDto.toAuthentication();
 
