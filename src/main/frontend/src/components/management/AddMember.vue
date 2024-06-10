@@ -116,13 +116,16 @@
                     <div
                       v-if="loginedPosion === '최고 관리자'"
                       class="dropdown-item"
-                      @click="setPosition('관리자')"
+                      @click="setPosition('ROLE_ADMINISTRATOR')"
                     >
                       관리자
                     </div>
                   </li>
                   <li>
-                    <div class="dropdown-item" @click="setPosition('사원')">
+                    <div
+                      class="dropdown-item"
+                      @click="setPosition('ROLE_USER')"
+                    >
                       사원
                     </div>
                   </li>
