@@ -235,7 +235,7 @@ export default {
       ) {
         console.log(this.memberInfo);
         axios
-          .post(`${api}/create`, {
+          .post(`${api}/member/create`, {
             name: this.memberInfo.name,
             role: this.memberInfo.position,
             department: this.memberInfo.department,
@@ -247,16 +247,12 @@ export default {
             console.log(response);
             //인풋 폼 리셋
             this.memberInfo = {
-              id: 0,
-              passwd: "",
               name: "",
               email: "",
               phoneNum: "",
-              salary: "",
+              salary: 0,
               position: "",
               department: "",
-              createDate: "",
-              editeDate: "",
             };
             // window.location.href = `/management/member/${
             //   JSON.parse(sessionStorage.getItem("setUser")).userName
