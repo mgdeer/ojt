@@ -3,7 +3,6 @@ package com.example.demo.entity;
 import com.example.demo.Role;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -38,7 +37,6 @@ public class Member extends BaseTimeEntity{
     private String department;
 
     @Column(nullable = false)
-    @ColumnDefault("'o'")
     private String temp;
 
     private int salary;
