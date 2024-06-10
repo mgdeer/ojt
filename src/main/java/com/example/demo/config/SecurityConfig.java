@@ -67,7 +67,7 @@ public class SecurityConfig {
         //경로별 인가 작업
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/member/*").permitAll()
+                        .requestMatchers("/member/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMINISTRATOR")
                         .anyRequest().authenticated())
         .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
