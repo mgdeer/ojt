@@ -10,4 +10,7 @@ public class UserCreateForm {
     private String name;
     private Role role;
     private String department;
+    private String email;
+    private String phone;
+    private int salary;
 }

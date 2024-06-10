@@ -58,6 +58,8 @@ public class MemberServiceImpl implements MemberService {
                     .department(userCreateForm.getDepartment())
                     .name(userCreateForm.getName())
                     .role(userCreateForm.getRole())
+                    .phone(userCreateForm.getPhone())
+                    .salary(userCreateForm.getSalary())
                     .build();
             memberRepository.save(member);
             return ResponseEntity.ok("Signup successful");
