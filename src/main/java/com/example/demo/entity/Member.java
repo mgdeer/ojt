@@ -15,6 +15,7 @@ public class Member extends BaseTimeEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long realId;
 
+    @Column(unique = true)
     private long id;
 
     @Column(nullable = false)

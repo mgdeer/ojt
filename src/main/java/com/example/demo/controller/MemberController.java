@@ -22,6 +22,7 @@ public class MemberController {
     public ResponseEntity<String> signup(@RequestBody UserCreateForm userCreateForm) {
         return memberService.signup(userCreateForm);
     }
+
     @GetMapping("/{email}")
     public ResponseEntity<MemberResponseDto> findMemberInfoByEmail(@PathVariable String email) {
         return ResponseEntity.ok(memberService.findMemberInfoByEmail(email));
@@ -34,6 +35,11 @@ public class MemberController {
     @PostMapping("/reissue")
     public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto, HttpServletRequest request) {
         return ResponseEntity.ok(memberService.reissue(request, tokenRequestDto));
+    }
+
+    @GetMapping("emailCheck/{email}")
+    public boolean emailDuplicationCheck(@PathVariable String email) {
+        return memberService.emailCheck(email);
     }
 
 }
