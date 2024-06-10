@@ -13,4 +13,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select count(*) + 1 from Member m where year(m.createdDate) = year(curdate())")
     String makeId();
+
+    boolean existsByEmail(String email);
 }
