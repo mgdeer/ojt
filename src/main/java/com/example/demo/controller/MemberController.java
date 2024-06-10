@@ -37,7 +37,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.reissue(request, tokenRequestDto));
     }
 
-    @GetMapping("emailCheck/{email}")
+    @GetMapping("/emailCheck/{email}")
     public boolean emailDuplicationCheck(@PathVariable String email) {
         return memberService.emailCheck(email);
     }
