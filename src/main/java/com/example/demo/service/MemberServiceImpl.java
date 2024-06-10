@@ -24,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,22 +46,27 @@ public class MemberServiceImpl implements MemberService {
 //        if(!userCreateForm.getPassword().equals(userCreateForm.getPasswordConfirm())){
 //            return ResponseEntity.badRequest().body("Passwords do not match");
 //        }
+        System.out.println("this is signup method");
+        System.out.println(userCreateForm.getDepartment());
         try {
             LocalDate now = LocalDate.now();
             String count = memberRepository.makeId();
             String newId = now.getYear() + "0".repeat(5-count.length()) + count;
             String encryptedPassword = sha256.encrypt("multiojt19");
             Member member = Member.builder()
+                    .salary(userCreateForm.getSalary())
                     .id(Long.parseLong(newId))
                     .password(encryptedPassword)
                     .department(userCreateForm.getDepartment())
+                    .email(userCreateForm.getEmail())
                     .name(userCreateForm.getName())
-                    .role(userCreateForm.getRole())
+                    .nickname("_")
                     .phone(userCreateForm.getPhone())
-                    .salary(userCreateForm.getSalary())
                     .temp("o")
+                    .role(userCreateForm.getRole())
                     .build();
             memberRepository.save(member);
+            System.out.println("Successfully registered member");
             return ResponseEntity.ok("Signup successful");
         } catch (Exception e) {
             log.error("Signup failed", e);
