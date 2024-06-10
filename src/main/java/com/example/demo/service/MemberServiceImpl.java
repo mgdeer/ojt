@@ -52,7 +52,7 @@ public class MemberServiceImpl implements MemberService {
             String encryptedPassword = sha256.encrypt("multiojt19");
             Member member = Member.builder()
                     .salary(userCreateForm.getSalary())
-                    .realId(newId)
+                    .realId(Long.parseLong(newId))
                     .password(encryptedPassword)
                     .department(userCreateForm.getDepartment())
                     .email(userCreateForm.getEmail())
