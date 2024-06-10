@@ -13,7 +13,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="addMemberModalLabel">
-            <i class="bi bi-person-fill-add"></i> 사원 추가
+            <i class="bi bi-person-fill-add" style="margin: 0"></i> 사원 추가
           </h1>
           <button
             type="button"
@@ -28,7 +28,7 @@
           <h5>이름</h5>
           <div class="input-group" style="margin-bottom: 40px">
             <span class="input-group-text" id="basic-addon1"
-              ><i class="bi bi-person-fill"></i
+              ><i class="bi bi-person-fill" style="margin: 0"></i
             ></span>
             <input
               type="text"
@@ -52,6 +52,13 @@
               aria-describedby="basic-addon2"
               v-model="memberInfo.email"
             />
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              @click="emailDup"
+            >
+              중복 확인
+            </button>
           </div>
           <!-- 유효값 경고 -->
           <div style="height: 40px">
@@ -74,6 +81,13 @@
               aria-describedby="basic-addon3"
               v-model="memberInfo.phoneNum"
             />
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              @click="phoneNumDup"
+            >
+              중복 확인
+            </button>
           </div>
           <!-- 유효값 경고 -->
           <div style="height: 40px">
@@ -225,6 +239,12 @@ export default {
     };
   },
   methods: {
+    emailDup() {
+      console.log("이메일 중복 확인 클릭");
+    },
+    phoneNumDup() {
+      console.log("전화번호 중복 확인 클릭");
+    },
     //추가 버튼 눌렀을 때 메소드
     infoSubmit() {
       if (
@@ -235,7 +255,6 @@ export default {
         this.emailValidChk &&
         this.telValidChk
       ) {
-        console.log(this.memberInfo);
         axios
           .post(`${api}/member/create`, {
             name: this.memberInfo.name,

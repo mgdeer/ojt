@@ -78,6 +78,13 @@
   </div>
 </template>
 <script>
+//엑시오스 임포트
+import axios from "axios";
+//jwt
+import VueJwtDecode from "vue-jwt-decode";
+//엑시오스 주소
+const api = "http://localhost:8080";
+
 export default {
   name: "loginModal",
   data() {
@@ -101,25 +108,49 @@ export default {
     //로그인 클릭시 메소드
     submit() {
       this.validCheck = true;
-      console.log(this.userId, this.passwd);
       //데이터 전송 필요.
+      axios
+        .post(`${api}/member/login`, {
+          id: this.userId,
+          password: this.passwd,
+        })
+        .then(function (res) {
+          console.log(res);
+          let token = res.data.accessToken;
+          localStorage.setItem("token", token);
 
-      //백엔드에서 리턴된 값이 true
-      if (this.userId === "20240001" && this.passwd === "hyun1991!") {
-        this.isValid = true;
-        //세션 저장
-        sessionStorage.setItem("setUser", JSON.stringify(this.userInfo));
-        //인풋 폼 리셋
-        this.userId = "";
-        this.passwd = "";
-        window.location.href = `/${
-          JSON.parse(sessionStorage.getItem("setUser")).userName
-        }`;
-      } else {
-        this.isValid = false;
-      }
-      // axios로 백엔드 전달 값이 맞는지 확인하고 돌아온 값이 트루라면 로그인된 홈화면으로 이동
-      // fales라면 아이디나 비밀번호가 틀렸다는 문구 보여주기
+          //vue-jwt-decode 사용해서 JWT를 decode 한다.
+          let decodedToken = VueJwtDecode.decode(token);
+          console.log(decodedToken);
+          // 이게 유저정보인지?
+          let config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            // 토큰 기한 설정이 무슨말인지? exp로 기한설정이 되어있는거 같던데?
+            // Authorization 을 다시 보내서 유저정보를 받고 로그인 시키면 해당 유저 정보는 세션에 저장?
+          };
+          axios
+            .get("/admin", config)
+            .then((response) => {
+              console.log("여기", response);
+              // 정보 들어오는게 없는데??
+              let userInfo = {
+                // nickname: response.data.nickname,
+                // username: response.data.username,
+              };
+              console.log(userInfo);
+            })
+            .catch((error) => {
+              console.log("여기", error);
+            });
+          //인풋 폼 리셋
+          this.userId = "";
+          this.passwd = "";
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
     },
     // 닫기 클릭시 메소드
     reset() {

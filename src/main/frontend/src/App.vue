@@ -21,9 +21,11 @@ export default {
 <style>
 .warning {
   color: red;
+  text-align: start;
 }
 .pass {
   color: blue;
+  text-align: start;
 }
 #container {
   display: flex;
