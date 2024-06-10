@@ -52,7 +52,7 @@ public class MemberServiceImpl implements MemberService {
             String encryptedPassword = sha256.encrypt("multiojt19");
             Member member = Member.builder()
                     .salary(userCreateForm.getSalary())
-                    .id(Long.parseLong(newId))
+                    .id(newId)
                     .password(encryptedPassword)
                     .department(userCreateForm.getDepartment())
                     .email(userCreateForm.getEmail())
@@ -72,8 +72,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberResponseDto findMemberInfoByEmail(String email) {
-        return memberRepository.findByEmail(email)
+    public MemberResponseDto findMemberInfoByEmail(String id) {
+        return memberRepository.findByid(id)
                 .map(MemberResponseDto::of)
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
     }
@@ -81,7 +81,8 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public TokenDto login(HttpServletRequest request, MemberRequestDto memberRequestDto) {
 
-        memberRequestDto.setPassword(memberRequestDto.getEmail()+memberRequestDto.getPassword());
+//        memberRequestDto.setPassword(memberRequestDto.getEmail()+memberRequestDto.getPassword());
+        memberRequestDto.setPassword(memberRequestDto.getPassword());
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberRequestDto.toAuthentication();
 
@@ -164,7 +165,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateMyInfo(Member member) {
-        Member existingMember = memberRepository.findById(member.getId()).orElse(null);
+        Member existingMember = memberRepository.findByid(member.getId()).orElse(null);
         if (existingMember != null) {
             existingMember.setEmail(member.getEmail());
             // existingMember.setPhoneNumber(member.getPhoneNumber()); 연락처

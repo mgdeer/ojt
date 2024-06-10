@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    boolean existsByEmail(String email);
+    boolean existsByid(String id);
 
-    Optional<Member> findByEmail(String email);
+    Optional<Member> findByid(String id);
 
     @Query("select count(*) + 1 from Member m where year(m.createdDate) = year(curdate())")
     String makeId();
