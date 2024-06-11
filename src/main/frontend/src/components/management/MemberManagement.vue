@@ -151,37 +151,7 @@
               </label>
             </div>
           </li>
-        </ul>
-        <!-- 부서 체크박스 -->
-        <!-- 필터링 정보 & 버튼 -->
-        <div class="filterBtn">
-          <div>
-            <div style="margin-bottom: 10px">
-              필터링 역할 :
-              {{ checkedPosition.allCheckPosition ? "전체" : "" }}
-              {{ checkedPosition.chiefCheckPosition ? "최고 관리자" : "" }}
-              {{ checkedPosition.managerCheckPosition ? "관리자" : "" }}
-              {{ checkedPosition.userCheckPosition ? "사원" : "" }}
-            </div>
-            <div>
-              필터링 부서 :
-              {{ checkedDepartment.allCheckDepartment ? "전체" : "" }}
-              {{ checkedDepartment.salesCheckDepartment ? "영업" : "" }}
-              {{ checkedDepartment.frontCheckDepartment ? "프론트엔드" : "" }}
-              {{ checkedDepartment.backCheckDepartment ? "백엔드" : "" }}
-            </div>
-          </div>
-          <button
-            class="btn btn-outline-success manageBtns"
-            type="submit"
-            @click="setList"
-          >
-            필터 적용
-          </button>
-        </div>
-        <!-- 필터링 정보 & 버튼 -->
-        <!-- 서치바 -->
-        <ul class="options list-group">
+          <!-- 서치바 -->
           <li class="searchInput list-group-item">
             <div class="headerTitle">이름 검색</div>
             <form class="d-flex">
@@ -206,12 +176,24 @@
                 type="submit"
                 @click="searchNameReset"
               >
-                <a href="#resetBtn">Reset</a>
+                Reset
               </button>
             </form>
           </li>
+          <!-- 서치바 -->
         </ul>
-        <!-- 서치바 -->
+        <!-- 필터링 버튼 -->
+        <div class="filterBtn">
+          <button
+            class="btn btn-outline-success manageBtns"
+            type="submit"
+            @click="setList"
+          >
+            필터 적용
+          </button>
+        </div>
+        <!-- 필터링 버튼 -->
+        <!-- 부서 체크박스 -->
         <!-- 체크박스, 서치 -->
         <!-- 리스트 해더 -->
         <div class="listHeader">
@@ -223,7 +205,7 @@
             data-bs-toggle="modal"
             data-bs-target="#addMemberModal"
           >
-            + 사원 추가
+            사원 추가
           </button>
           <!-- 사원추가 모달 버튼 -->
           <!-- 사원추가 모달 -->
@@ -460,6 +442,8 @@ export default {
   name: "memberManagement",
   data() {
     return {
+      //화면 가로 크기
+      width: 0,
       //라인 차트 값
       userNumYears: [0, 0, 0, 0, 0],
       //라인 차트 값
@@ -1144,7 +1128,7 @@ export default {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 .options {
-  margin: 20px 0;
+  margin: 12px 0;
 }
 .searchOptions {
   height: 60px;
@@ -1165,12 +1149,10 @@ export default {
 .listHeader {
   display: flex;
   width: 100%;
-  margin: 10px 0;
+  margin: 30px 0 10px 0;
   justify-content: space-between;
 }
 .listTitle {
-  margin-right: var(--bs-gutter-x, 0.75rem);
-  margin-left: var(--bs-gutter-x, 0.75rem);
 }
 .tableText {
   text-align: center;
@@ -1185,9 +1167,10 @@ export default {
 }
 .filterBtn {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding-left: 10px;
+  justify-content: end;
+  border-bottom: 1px solid gray;
+  padding-bottom: 30px;
 }
 .manageBtns a {
   text-decoration: none;
@@ -1197,13 +1180,10 @@ export default {
   color: white;
 }
 .charts {
-  display: flex;
+  display: grid;
   align-items: center;
-}
-.circle {
-  width: 50%;
-}
-.stick {
-  width: 50%;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-auto-rows: minmax(100px, auto);
+  gap: 20px;
 }
 </style>

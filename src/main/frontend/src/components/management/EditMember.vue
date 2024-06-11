@@ -211,16 +211,12 @@ export default {
   data() {
     return {
       memberInfo: {
-        id: 0,
-        passwd: "",
         name: "",
         email: "",
         phoneNum: "",
         salary: "",
         position: "",
         department: "",
-        createDate: "",
-        editeDate: "",
       },
       inputCheck: true,
       loginedPosion: "",
@@ -239,19 +235,6 @@ export default {
       ) {
         console.log(this.memberInfo);
         //데이터 전송 필요.
-        //인풋 폼 리셋
-        this.memberInfo = {
-          id: 0,
-          passwd: "",
-          name: "",
-          email: "",
-          phoneNum: "",
-          salary: "",
-          position: "",
-          department: "",
-          createDate: "",
-          editeDate: "",
-        };
         window.location.href = `/management/member/${
           JSON.parse(sessionStorage.getItem("setUser")).userName
         }`;

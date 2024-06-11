@@ -30,22 +30,6 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <router-link
-              class="nav-link active"
-              aria-current="page"
-              v-if="isLogin"
-              :to="`/${userInfo.userName}`"
-              >Home</router-link
-            >
-            <router-link
-              class="nav-link active"
-              aria-current="page"
-              v-else
-              to="/"
-              >Home</router-link
-            >
-          </li>
-          <li class="nav-item">
-            <router-link
               class="nav-link"
               v-if="isLogin"
               :to="`/product/${userInfo.userName}`"
@@ -58,7 +42,7 @@
         </ul>
         <!-- 왼쪽 네비 링크 -->
         <!-- 오른쪽 네비 링크 -->
-        <ul class="d-flex navbar-nav">
+        <ul class="d-flex navbar-nav" style="gap: 10px">
           <li class="nav-item">
             <router-link
               v-if="isLogin"
