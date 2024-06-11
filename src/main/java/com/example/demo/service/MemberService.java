@@ -13,6 +13,8 @@ public interface MemberService {
     ResponseEntity<String> signup(UserCreateForm userCreateForm);
 
     MemberResponseDto findMemberInfoById(String email);
+    MemberResponseDto MemberInfo(String id);
+    MemberResponseDto updateMemberInfo(String id, MemberUpdateDto memberUpdateDto);
 
     TokenDto login(HttpServletRequest request, MemberRequestDto memberRequestDto);
 
@@ -22,7 +24,7 @@ public interface MemberService {
 
     List<Member> findAll();
     Member findById(String id);
-    void update(Member member);
+//    void update(Member member);
     void delete(String id);
     void updateMyInfo(Member member);
 
