@@ -50,8 +50,9 @@ public class MemberController {
     }
 
     @GetMapping("/getAllMember")
-    public List<Member> listMembers() {
-        return memberService.findAll();
+    public ResponseEntity<List<Member>> listMembers() {
+        List<Member> members = memberService.findAll();
+        return ResponseEntity.ok(members);
     }
 
     @GetMapping("/{id}")
@@ -59,23 +60,21 @@ public class MemberController {
         return memberService.findById(id);
     }
 
-    @PutMapping("/{id}")
-    public Member editMember(@PathVariable String id, @RequestBody Member member) {
-        member.setId(id);
-        memberService.update(member);
-        return member;
-    }
+    // @PutMapping("/{id}")
+    // public Member editMember(@PathVariable String id, @RequestBody Member member) {
+    //     member.setId(id);
+    //     memberService.update(member);
+    //     return member;
+    // }
 
     @DeleteMapping("/{id}")
     public void deleteMember(@PathVariable String id) {
         memberService.delete(id);
     }
 
-    @GetMapping("/me")
-    public Member myInfo() {
-
-        Long loggedInUserId = 1L; // 로그인한 아이디 세션 받아오기
-        return memberService.findById(loggedInUserId);
+    @GetMapping("/me/{id}")
+    public Member myInfo(@PathVariable String id) {
+        return memberService.findById(id);
     }
 
     @PutMapping("/me")
