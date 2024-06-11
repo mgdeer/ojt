@@ -159,9 +159,14 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+//    @Override
+//    public void delete(String id) {
+//        memberRepository.deleteById(id);
+//    }
     @Override
+    @Transactional
     public void delete(String id) {
-        memberRepository.deleteById(id);
+        memberRepository.deleteById(id); // 여기서 deleteById를 deleteByid로 수정
     }
 
      @Override
