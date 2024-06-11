@@ -208,6 +208,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<String> changePassword(ChangePasswordDto changePasswordDto) {
         try {
             String id = changePasswordDto.getId();
@@ -215,8 +216,11 @@ public class MemberServiceImpl implements MemberService {
             Optional<Member> member = memberRepository.findByid(id);
             member.ifPresent(m -> {
                 m.setPassword(newPwd);
+                System.out.println(m.getPassword());
                 m.setTemp("x");
-                memberRepository.save(m);
+                System.out.println(m.getTemp());
+                Member member1 = memberRepository.save(m);
+                System.out.println(member1.getId());
             });
             return ResponseEntity.ok("Change password successful");
 
