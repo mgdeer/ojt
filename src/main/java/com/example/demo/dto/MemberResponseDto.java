@@ -15,6 +15,8 @@ public class MemberResponseDto {
     private String password;
     private Role role;
     private String department;
+    private int salary;
+
 
     public static MemberResponseDto of(Member member) {
         MemberResponseDto dto = new MemberResponseDto();
@@ -24,6 +26,7 @@ public class MemberResponseDto {
         dto.setPassword(member.getPassword());
         dto.setRole(member.getRole());
         dto.setDepartment(member.getDepartment());
+        dto.setSalary(member.getSalary());
         return dto;
     }
 }
