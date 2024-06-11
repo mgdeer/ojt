@@ -39,16 +39,12 @@ public class MemberServiceImpl implements MemberService {
     private final SHA256 sha256;
 
     @Override
+    @Transactional
     public ResponseEntity<String> signup(UserCreateForm userCreateForm) {
-//        if(!userCreateForm.getPassword().equals(userCreateForm.getPasswordConfirm())){
-//            return ResponseEntity.badRequest().body("Passwords do not match");
-//        }
-
         try {
             LocalDate now = LocalDate.now();
             String count = memberRepository.makeId();
             String newId = now.getYear() + "0".repeat(5-count.length()) + count;
-            System.out.println(newId);
             String encryptedPassword = sha256.encrypt("multiojt19");
             Member member = Member.builder()
                     .salary(userCreateForm.getSalary())
@@ -61,9 +57,7 @@ public class MemberServiceImpl implements MemberService {
                     .temp("o")
                     .role(userCreateForm.getRole())
                     .build();
-            System.out.println(member.getId());
             memberRepository.save(member);
-            System.out.println("Successfully registered member");
             return ResponseEntity.ok("Signup successful");
         } catch (Exception e) {
             log.error("Signup failed", e);
@@ -216,11 +210,8 @@ public class MemberServiceImpl implements MemberService {
             Optional<Member> member = memberRepository.findByid(id);
             member.ifPresent(m -> {
                 m.setPassword(newPwd);
-                System.out.println(m.getPassword());
                 m.setTemp("x");
-                System.out.println(m.getTemp());
-                Member member1 = memberRepository.save(m);
-                System.out.println(member1.getId());
+                memberRepository.save(m);
             });
             return ResponseEntity.ok("Change password successful");
 
