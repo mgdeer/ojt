@@ -155,14 +155,31 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void update(Member member) {
-        memberRepository.save(member);
+    public MemberResponseDto MemberInfo(String id) {
+        return memberRepository.findByid(id)
+                .map(MemberResponseDto::of)
+                .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
     }
 
-//    @Override
-//    public void delete(String id) {
-//        memberRepository.deleteById(id);
-//    }
+    @Override
+    @Transactional
+    public MemberResponseDto updateMemberInfo(String id, MemberUpdateDto memberUpdateDto) {
+        Member member = memberRepository.findByid(id)
+                .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
+
+
+        member.setName(memberUpdateDto.getName());
+        member.setEmail(memberUpdateDto.getEmail());
+        member.setPhone(memberUpdateDto.getPhone());
+        member.setSalary(memberUpdateDto.getSalary());
+        member.setRole(memberUpdateDto.getRole());
+        member.setDepartment(memberUpdateDto.getDepartment());
+
+        memberRepository.save(member);
+
+        return MemberResponseDto.of(member);
+    }
+
     @Override
     @Transactional
     public void delete(String id) {
