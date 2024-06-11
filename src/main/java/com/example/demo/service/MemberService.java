@@ -29,4 +29,5 @@ public interface MemberService {
     void updateMyInfo(Member member);
 
     ResponseEntity<Boolean> emailCheck(String email);
+    ResponseEntity<Boolean> phoneCheck(String phone);
 }

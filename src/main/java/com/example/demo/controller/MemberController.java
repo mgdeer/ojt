@@ -40,4 +40,9 @@ public class MemberController {
     public ResponseEntity<Boolean> emailCheck(@PathVariable(name = "email") String email) {
         return memberService.emailCheck(email);
     }
+
+    @GetMapping("/phoneCheck/{phone}")
+    public ResponseEntity<Boolean> phoneCheck(@PathVariable(name = "phone") String phone) {
+        return memberService.phoneCheck(phone);
+    }
 }

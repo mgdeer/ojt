@@ -179,4 +179,9 @@ public class MemberServiceImpl implements MemberService {
     public ResponseEntity<Boolean> emailCheck(String email) {
         return ResponseEntity.ok(!memberRepository.existsByEmail(email));
     }
+
+    @Override
+    public ResponseEntity<Boolean> phoneCheck(String phone) {
+        return ResponseEntity.ok(!memberRepository.existsByPhone(phone));
+    }
 }
