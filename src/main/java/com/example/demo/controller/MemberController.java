@@ -25,10 +25,10 @@ public class MemberController {
     public ResponseEntity<String> signup(@RequestBody UserCreateForm userCreateForm) {
         return memberService.signup(userCreateForm);
     }
-    @GetMapping("/{id}")
-    public ResponseEntity<MemberResponseDto> findMemberInfoByEmail(@PathVariable(name = "id") String id) {
-        return ResponseEntity.ok(memberService.findMemberInfoById(id));
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<MemberResponseDto> findMemberInfoByEmail(@PathVariable(name = "id") String id) {
+//        return ResponseEntity.ok(memberService.findMemberInfoById(id));
+//    }
     @PostMapping("/login")
     public ResponseEntity<TokenDto> login(@RequestBody MemberRequestDto memberRequestDto, HttpServletRequest request) {
         return ResponseEntity.ok(memberService.login(request, memberRequestDto));
