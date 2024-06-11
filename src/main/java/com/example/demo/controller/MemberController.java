@@ -49,25 +49,25 @@ public class MemberController {
         return memberService.phoneCheck(phone);
     }
 
-    @GetMapping
+    @GetMapping("/getAllMember")
     public List<Member> listMembers() {
         return memberService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Member getMember(@PathVariable Long id) {
+    public Member getMember(@PathVariable String id) {
         return memberService.findById(id);
     }
 
     @PutMapping("/{id}")
-    public Member editMember(@PathVariable Long id, @RequestBody Member member) {
+    public Member editMember(@PathVariable String id, @RequestBody Member member) {
         member.setId(id);
         memberService.update(member);
         return member;
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMember(@PathVariable Long id) {
+    public void deleteMember(@PathVariable String id) {
         memberService.delete(id);
     }
 

@@ -150,8 +150,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member findById(Long id) {
-        return memberRepository.findById(id).orElse(null);
+    public Member findById(String id) {
+        return memberRepository.findByid(id).orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
     }
 
     @Override
@@ -160,20 +160,20 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         memberRepository.deleteById(id);
     }
 
-    @Override
-    public void updateMyInfo(Member member) {
-        Member existingMember = memberRepository.findByid(member.getId()).orElse(null);
-        if (existingMember != null) {
-            existingMember.setEmail(member.getEmail());
-            // existingMember.setPhoneNumber(member.getPhoneNumber()); 연락처
-            existingMember.setName(member.getName());
-            memberRepository.save(existingMember);
-        }
-    }
+    // @Override
+    // public void updateMyInfo(Member member) {
+    //     Member existingMember = memberRepository.findByid(member.getId()).orElse(null);
+    //     if (existingMember != null) {
+    //         existingMember.setEmail(member.getEmail());
+    //         existingMember.setPhone(member.getPhone());
+    //         existingMember.setName(member.getName());
+    //         memberRepository.save(existingMember);
+    //     }
+    // }
 
     @Override
     public ResponseEntity<Boolean> emailCheck(String email) {

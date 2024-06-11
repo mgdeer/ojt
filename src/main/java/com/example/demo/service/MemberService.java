@@ -23,9 +23,9 @@ public interface MemberService {
 //    ResponseEntity<String> update(UserInfoForm userInfoForm);
 
     List<Member> findAll();
-    Member findById(Long id);
+    Member findById(String id);
     void update(Member member);
-    void delete(Long id);
+    void delete(String id);
     void updateMyInfo(Member member);
 
     ResponseEntity<Boolean> emailCheck(String email);
