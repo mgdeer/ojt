@@ -63,10 +63,15 @@ public class MemberController {
     //     memberService.update(member);
     //     return member;
     // }
-
+//
+//    @DeleteMapping("/{id}")
+//    public void deleteMember(@PathVariable String id) {
+//        memberService.delete(id);
+//    }
     @DeleteMapping("/{id}")
-    public void deleteMember(@PathVariable String id) {
+    public ResponseEntity<Void> deleteMember(@PathVariable String id) {
         memberService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me/{id}")
