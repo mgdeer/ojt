@@ -72,7 +72,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberResponseDto findMemberInfoByEmail(String id) {
+    public MemberResponseDto findMemberInfoById(String id) {
         return memberRepository.findByid(id)
                 .map(MemberResponseDto::of)
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
@@ -108,6 +108,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     public TokenDto reissue(HttpServletRequest request, TokenRequestDto tokenRequestDto) {
+        System.out.println("이거맞아? : " + tokenRequestDto.getRefreshToken());
 
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {

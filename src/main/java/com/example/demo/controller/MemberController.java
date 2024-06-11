@@ -22,9 +22,9 @@ public class MemberController {
     public ResponseEntity<String> signup(@RequestBody UserCreateForm userCreateForm) {
         return memberService.signup(userCreateForm);
     }
-    @GetMapping("/{email}")
-    public ResponseEntity<MemberResponseDto> findMemberInfoByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(memberService.findMemberInfoByEmail(email));
+    @GetMapping("/{id}")
+    public ResponseEntity<MemberResponseDto> findMemberInfoByEmail(@PathVariable(name = "id") String id) {
+        return ResponseEntity.ok(memberService.findMemberInfoById(id));
     }
     @PostMapping("/login")
     public ResponseEntity<TokenDto> login(@RequestBody MemberRequestDto memberRequestDto, HttpServletRequest request) {

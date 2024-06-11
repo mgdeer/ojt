@@ -14,7 +14,7 @@ import com.example.demo.entity.Member;
 public interface MemberService {
     ResponseEntity<String> signup(UserCreateForm userCreateForm);
 
-    MemberResponseDto findMemberInfoByEmail(String email);
+    MemberResponseDto findMemberInfoById(String email);
 
     TokenDto login(HttpServletRequest request, MemberRequestDto memberRequestDto);
 
