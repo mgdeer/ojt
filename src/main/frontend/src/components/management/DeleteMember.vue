@@ -25,7 +25,6 @@
         <div class="modal-body">
           <!-- 모달 안 내용 -->
           {{ deleteMemberName }}을(를) 삭제 하시겠습니까?
-          <div>넘버 확인용 삭제 필요 : {{ deleteMemberNum }}</div>
           <!-- 모달 안 내용 -->
         </div>
         <div class="modal-footer">
@@ -50,6 +49,12 @@
   </div>
 </template>
 <script>
+//엑시오스 임포트
+import axios from "axios";
+
+//엑시오스 주소
+const api = "http://localhost:8080";
+
 export default {
   name: "deleteMember",
   components: {},
@@ -60,6 +65,15 @@ export default {
   methods: {
     deleteUser() {
       //백엔드 연동 필요
+      axios
+        .delete(`${api}/member/${this.deleteMemberNum}`)
+        .then((response) => {
+          console.log(response);
+          window.location.href = `/management/member/${this.deleteMemberNum}`;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       console.log("삭제 할 유저 아이디", this.deleteMemberNum);
     },
   },

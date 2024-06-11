@@ -32,7 +32,6 @@ export default {
     //로그인된 유저 정보
     if (user !== null) {
       this.userId = user.sub;
-      console.log(this.userId);
     }
   },
 };

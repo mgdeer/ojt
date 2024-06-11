@@ -294,13 +294,13 @@ export default {
             phone: this.memberInfo.phoneNum,
             salary: this.memberInfo.salary,
           })
-          .then(function (response) {
+          .then((response) => {
             console.log(response);
             window.location.href = `/management/member/${
               JSON.parse(sessionStorage.getItem("logined")).sub
             }`;
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
           });
         //데이터 전송 필요.
@@ -354,7 +354,6 @@ export default {
   mounted() {
     //로그인된 유저의 포지션
     if (user !== null) {
-      console.log(user);
       this.loginedPosion = user.auth;
     }
   },

@@ -25,20 +25,10 @@
         <!-- 토탈 수치 -->
         <!-- 그래프 -->
         <div class="charts">
-          <SimpleDonut
-            class="circle"
-            :salesNum="salesNum"
-            :frontNum="frontNum"
-            :backNum="backNum"
-          />
+          <SimpleDonut class="circle" :totalNumArr="totalNumArr" />
           <div class="stick">
             <StickChart class="chart" :userNumYears="userNumYears" />
-            <DistributedColumns
-              class="chart"
-              :salesSalaryAvg="salesSalaryAvg"
-              :frontSalaryAvg="frontSalaryAvg"
-              :backSalaryAvg="backSalaryAvg"
-            />
+            <DistributedColumns class="chart" :avgArr="avgArr" />
           </div>
         </div>
         <!-- 그래프 -->
@@ -236,14 +226,6 @@
                       <li>
                         <div
                           class="dropdown-item"
-                          @click="salarySort('정렬 해제')"
-                        >
-                          정렬 해제
-                        </div>
-                      </li>
-                      <li>
-                        <div
-                          class="dropdown-item"
                           @click="salarySort('오름 차순')"
                         >
                           오름 차순
@@ -272,14 +254,6 @@
                       생성 날짜 <i class="bi bi-caret-down-fill"></i>
                     </div>
                     <ul class="dropdown-menu">
-                      <li>
-                        <div
-                          class="dropdown-item"
-                          @click="dateSort('정렬 해제')"
-                        >
-                          정렬 해제
-                        </div>
-                      </li>
                       <li>
                         <div
                           class="dropdown-item"
@@ -342,7 +316,16 @@
               <tr v-for="member in finalFilter" :key="member.id">
                 <th class="tableText" scope="row">{{ member.id }}</th>
                 <td class="tableText">{{ member.name }}</td>
-                <td class="tableText">{{ member.position }}</td>
+                <td class="tableText" v-if="member.role === 'ROLE_CHIEF'">
+                  최고 관리자
+                </td>
+                <td
+                  class="tableText"
+                  v-else-if="member.role === 'ROLE_ADMINISTRATOR'"
+                >
+                  관리자
+                </td>
+                <td class="tableText" v-else>사원</td>
                 <td class="tableText">{{ member.department }}</td>
                 <td class="tableText">{{ member.salary }}만원</td>
                 <td class="tableText">
@@ -351,12 +334,12 @@
                     <div>{{ member.phoneNum }}</div>
                   </div>
                 </td>
-                <td class="tableText">{{ member.editDate }}</td>
-                <td class="tableText">{{ member.createDate }}</td>
+                <td class="tableText">{{ member.modDate.slice(0, 10) }}</td>
+                <td class="tableText">{{ member.createdDate.slice(0, 10) }}</td>
                 <!-- 비밀번호를 변경 했을 경우 채크 아닐경우 x -->
                 <td class="tableText">
                   <i
-                    v-if="member.isValid"
+                    v-if="member.temp === 'x'"
                     style="color: green"
                     class="bi bi-check-circle"
                   ></i>
@@ -366,7 +349,7 @@
                   <div
                     v-if="
                       loginedPosion === 'ROLE_ADMINISTRATOR' &&
-                      member.position === '사원'
+                      member.role === '사원'
                     "
                     class="listBtns"
                   >
@@ -377,7 +360,7 @@
                       data-bs-target="#editMemberModal"
                       @click="eidtMember(member.id)"
                     ></i>
-                    <EditMember :editMemberNum="editMemberNum" />
+                    <EditMember :editMemberInfo="editMemberInfo" />
                     <i
                       style="color: red"
                       class="bi bi-person-dash"
@@ -402,7 +385,7 @@
                       data-bs-target="#editMemberModal"
                       @click="eidtMember(member.id)"
                     ></i>
-                    <EditMember :editMemberNum="editMemberNum" />
+                    <EditMember :editMemberInfo="editMemberInfo" />
                     <i
                       style="color: red"
                       class="bi bi-person-dash"
@@ -450,9 +433,13 @@ export default {
     return {
       //라인 차트 값
       userNumYears: [0, 0, 0, 0, 0],
-      //라인 차트 값
+      //막대 차트 값
+      avgArr: [0, 0, 0],
+      //원형 차트 값
+      totalNumArr: [0, 0, 0],
+
       loginedPosion: "",
-      editMemberNum: "",
+      editMemberInfo: {},
       deleteMemberNum: "",
       deleteMemberName: "",
       salarySortValue: "",
@@ -473,250 +460,7 @@ export default {
       //검색 인풋
       searchNameValue: "",
       //검색 인풋
-      //더미데이터
-      members: [
-        {
-          id: 1,
-          email: "kim123@naver.com",
-          phoneNum: "01012341234",
-          department: "영업",
-          salary: 6000,
-          name: "김유성",
-          position: "최고 관리자",
-          createDate: "2020-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 2,
-          email: "ryu123@naver.com",
-          phoneNum: "01012341234",
-          department: "백엔드",
-          salary: 4000,
-          name: "류지혁",
-          position: "관리자",
-          createDate: "2020-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 3,
-          email: "chu123@naver.com",
-          phoneNum: "01012341234",
-          department: "백엔드",
-          salary: 4500,
-          name: "추해성",
-          position: "관리자",
-          createDate: "2021-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 4,
-          email: "Choi123@naver.com",
-          phoneNum: "01012341234",
-          department: "프론트엔드",
-          salary: 4400,
-          name: "최하훈",
-          position: "관리자",
-          createDate: "2021-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 5,
-          email: "Tak123@naver.com",
-          phoneNum: "01012341234",
-          department: "영업",
-          salary: 4000,
-          name: "탁지석",
-          position: "관리자",
-          createDate: "2021-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 6,
-          email: "young123@naver.com",
-          phoneNum: "01012341234",
-          department: "영업",
-          salary: 3800,
-          name: "최은영",
-          position: "사원",
-          createDate: "2021-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 7,
-          email: "sim123@naver.com",
-          phoneNum: "01012341234",
-          department: "프론트엔드",
-          salary: 3900,
-          name: "심승연",
-          position: "사원",
-          createDate: "2021-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 8,
-          email: "kang23@naver.com",
-          phoneNum: "01012341234",
-          department: "프론트엔드",
-          salary: 3600,
-          name: "강하빈",
-          position: "사원",
-          createDate: "2021-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 9,
-          email: "jungsoo123@naver.com",
-          phoneNum: "01012341234",
-          department: "프론트엔드",
-          salary: 4000,
-          name: "강정수",
-          position: "사원",
-          createDate: "2022-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 10,
-          email: "jin123@naver.com",
-          phoneNum: "01012341234",
-          department: "프론트엔드",
-          salary: 4200,
-          name: "류진욱",
-          position: "사원",
-          createDate: "2022-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 11,
-          email: "nam123@naver.com",
-          phoneNum: "01012341234",
-          department: "프론트엔드",
-          salary: 3000,
-          name: "남은용",
-          position: "사원",
-          createDate: "2022-06-04",
-          isValid: false,
-          editDate: "",
-        },
-        {
-          id: 12,
-          email: "abc123@naver.com",
-          phoneNum: "01012341234",
-          department: "백엔드",
-          salary: 3000,
-          name: "김유성",
-          position: "사원",
-          createDate: "2022-06-04",
-          isValid: false,
-          editDate: "",
-        },
-        {
-          id: 13,
-          email: "yang23@naver.com",
-          phoneNum: "01012341234",
-          department: "영업",
-          salary: 3100,
-          name: "양현웅",
-          position: "사원",
-          createDate: "2023-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 14,
-          email: "woo123@naver.com",
-          phoneNum: "01012341234",
-          department: "백엔드",
-          salary: 3200,
-          name: "추현우",
-          position: "사원",
-          createDate: "2023-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 15,
-          email: "joo23@naver.com",
-          phoneNum: "01012341234",
-          department: "백엔드",
-          salary: 3500,
-          name: "심원주",
-          position: "사원",
-          createDate: "2024-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 16,
-          email: "no123@naver.com",
-          phoneNum: "01012341234",
-          department: "백엔드",
-          salary: 3500,
-          name: "노범우",
-          position: "사원",
-          createDate: "2024-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 17,
-          email: "park123@naver.com",
-          phoneNum: "01012341234",
-          department: "영업",
-          salary: 3200,
-          name: "박영호",
-          position: "사원",
-          createDate: "2024-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 18,
-          email: "pung123@naver.com",
-          phoneNum: "01012341234",
-          department: "프론트엔드",
-          salary: 3300,
-          name: "풍혜정",
-          position: "사원",
-          createDate: "2024-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 19,
-          email: "hong123@naver.com",
-          phoneNum: "01012341234",
-          department: "프론트엔드",
-          salary: 3400,
-          name: "홍경윤",
-          position: "사원",
-          createDate: "2024-06-04",
-          isValid: true,
-          editDate: "",
-        },
-        {
-          id: 20,
-          email: "seol123@naver.com",
-          phoneNum: "01012341234",
-          department: "프론트엔드",
-          salary: 3600,
-          name: "설은자",
-          position: "사원",
-          createDate: "2024-06-04",
-          isValid: true,
-          editDate: "",
-        },
-      ],
-      //더미데이터
+      members: [],
       //필터 적용 배열
       positionFilter: [],
       finalFilter: [],
@@ -757,7 +501,7 @@ export default {
           !this.checkedPosition.userCheckPosition
         ) {
           this.positionFilter = this.members.filter(
-            (v) => v.position === "최고 관리자"
+            (v) => v.role === "ROLE_CHIEF"
           );
         }
         if (
@@ -766,7 +510,7 @@ export default {
           !this.checkedPosition.userCheckPosition
         ) {
           this.positionFilter = this.members.filter(
-            (v) => v.position === "관리자"
+            (v) => v.role === "ROLE_ADMINISTRATOR"
           );
         }
         if (
@@ -775,7 +519,7 @@ export default {
           this.checkedPosition.userCheckPosition
         ) {
           this.positionFilter = this.members.filter(
-            (v) => v.position === "사원"
+            (v) => v.role === "ROLE_USER"
           );
         }
         //2개 선택된 경우
@@ -785,7 +529,7 @@ export default {
           !this.checkedPosition.userCheckPosition
         ) {
           this.positionFilter = this.members.filter(
-            (v) => v.position === "최고 관리자" || v.position === "관리자"
+            (v) => v.role === "ROLE_CHIEF" || v.role === "ROLE_ADMINISTRATOR"
           );
         }
         if (
@@ -794,7 +538,7 @@ export default {
           this.checkedPosition.userCheckPosition
         ) {
           this.positionFilter = this.members.filter(
-            (v) => v.position === "최고 관리자" || v.position === "사원"
+            (v) => v.role === "ROLE_CHIEF" || v.role === "ROLE_USER"
           );
         }
         if (
@@ -803,7 +547,7 @@ export default {
           this.checkedPosition.userCheckPosition
         ) {
           this.positionFilter = this.members.filter(
-            (v) => v.position === "관리자" || v.position === "사원"
+            (v) => v.role === "ROLE_ADMINISTRATOR" || v.role === "ROLE_USER"
           );
         }
         //3개 다 선택된경우
@@ -817,7 +561,6 @@ export default {
           this.positionFilter = this.members;
         }
       }
-      console.log(this.positionFilter);
       // 부서
       if (this.checkedDepartment.allCheckDepartment) {
         this.finalFilter = this.positionFilter;
@@ -889,11 +632,18 @@ export default {
           this.finalFilter = this.positionFilter;
         }
       }
-      console.log(this.finalFilter);
     },
     //수정 맴버 아이디 프롭스 메소드
     eidtMember(v) {
-      this.editMemberNum = v;
+      axios
+        .get(`${api}/member/${v}`)
+        .then((response) => {
+          console.log(response);
+          this.editMemberInfo = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     //삭제 맴버 아이디, 이름 프롭스 메소드
     deleteMember(num, name) {
@@ -942,9 +692,6 @@ export default {
         this.finalFilter = this.finalFilter.sort((a, b) => a.salary - b.salary);
       } else if (e === "내림 차순") {
         this.finalFilter = this.finalFilter.sort((a, b) => b.salary - a.salary);
-      } else {
-        //값 다시 받아와서 보여주기
-        this.finalFilter = this.members;
       }
       console.log(e);
     },
@@ -953,16 +700,15 @@ export default {
       if (e === "오름 차순") {
         this.finalFilter = this.finalFilter.sort(
           (a, b) =>
-            new Date(a.createDate).getTime() - new Date(b.createDate).getTime()
+            new Date(a.createdDate).getTime() -
+            new Date(b.createdDate).getTime()
         );
       } else if (e === "내림 차순") {
         this.finalFilter = this.finalFilter.sort(
           (a, b) =>
-            new Date(b.createDate).getTime() - new Date(a.createDate).getTime()
+            new Date(b.createdDate).getTime() -
+            new Date(a.createdDate).getTime()
         );
-      } else {
-        //값 다시 받아와서 보여주기
-        this.finalFilter = this.members;
       }
       console.log(e);
     },
@@ -981,11 +727,16 @@ export default {
     },
   },
   computed: {
+    //날짜 포맷
+    dateFormat(v) {
+      let date = new Date(v);
+      return date.toLocaleString();
+    },
     //데이터에서 최고 관리자 숫자 계산 메소드
     chiefNum() {
       let count = 0;
       for (let i = 0; i < this.members.length; i++) {
-        this.members[i].position === "최고 관리자" && count++;
+        this.members[i].role === "ROLE_CHIEF" && count++;
       }
       return count;
     },
@@ -993,7 +744,7 @@ export default {
     managerNum() {
       let count = 0;
       for (let i = 0; i < this.members.length; i++) {
-        this.members[i].position === "관리자" && count++;
+        this.members[i].role === "ROLE_ADMINISTRATOR" && count++;
       }
       return count;
     },
@@ -1001,105 +752,91 @@ export default {
     userNum() {
       let count = 0;
       for (let i = 0; i < this.members.length; i++) {
-        this.members[i].position === "사원" && count++;
+        this.members[i].role === "ROLE_USER" && count++;
       }
       return count;
-    },
-    //데이터에서 영업 부서 숫자 계산 메소드
-    salesNum() {
-      let count = 0;
-      for (let i = 0; i < this.members.length; i++) {
-        this.members[i].department === "영업" && count++;
-      }
-      return count;
-    },
-    //데이터에서 프론트 부서 숫자 계산 메소드
-    frontNum() {
-      let count = 0;
-      for (let i = 0; i < this.members.length; i++) {
-        this.members[i].department === "프론트엔드" && count++;
-      }
-      return count;
-    },
-    //데이터에서 백엔드 부서 숫자 계산 메소드
-    backNum() {
-      let count = 0;
-      for (let i = 0; i < this.members.length; i++) {
-        this.members[i].department === "백엔드" && count++;
-      }
-      return count;
-    },
-    //데이터에서 연봉 평균 계산 메소드
-    salesSalaryAvg() {
-      let sum = 0;
-      let totalCount = 0;
-      let avg = 0;
-      for (let i = 0; i < this.members.length; i++) {
-        if (this.members[i].department === "영업") {
-          totalCount = totalCount + 1;
-          sum = sum + this.members[i].salary;
-        }
-      }
-      avg = Math.floor(sum / totalCount);
-      return avg;
-    },
-    frontSalaryAvg() {
-      let sum = 0;
-      let totalCount = 0;
-      let avg = 0;
-      for (let i = 0; i < this.members.length; i++) {
-        if (this.members[i].department === "프론트엔드") {
-          totalCount = totalCount + 1;
-          sum = sum + this.members[i].salary;
-        }
-      }
-      avg = Math.floor(sum / totalCount);
-      return avg;
-    },
-    backSalaryAvg() {
-      let sum = 0;
-      let totalCount = 0;
-      let avg = 0;
-      for (let i = 0; i < this.members.length; i++) {
-        if (this.members[i].department === "백엔드") {
-          totalCount = totalCount + 1;
-          sum = sum + this.members[i].salary;
-        }
-      }
-      avg = Math.floor(sum / totalCount);
-      return avg;
     },
   },
   mounted() {
     axios
       .get(`${api}/member/getAllMember`)
       .then((response) => {
-        console.log(response);
+        // console.log(response.data);
+        this.members.push(...response.data);
+        for (let i = 0; i < this.members.length; i++) {
+          this.members[i].createdDate.slice(0, 4) === "2020" &&
+            this.userNumYears[0]++;
+          this.members[i].createdDate.slice(0, 4) === "2021" &&
+            this.userNumYears[1]++;
+          this.members[i].createdDate.slice(0, 4) === "2022" &&
+            this.userNumYears[2]++;
+          this.members[i].createdDate.slice(0, 4) === "2023" &&
+            this.userNumYears[3]++;
+          this.members[i].createdDate.slice(0, 4) === "2024" &&
+            this.userNumYears[4]++;
+        }
+        //데이터에서 연봉 평균 계산 메소드
+        //영업 평균
+        let salesSum = 0;
+        let salesTotalCount = 0;
+        for (let i = 0; i < this.members.length; i++) {
+          if (this.members[i].department === "영업") {
+            salesTotalCount = salesTotalCount + 1;
+            salesSum = salesSum + this.members[i].salary;
+          }
+        }
+        this.avgArr[0] = Math.floor(salesSum / salesTotalCount);
+        //프론트 평균
+        let frontSum = 0;
+        let frontTotalCount = 0;
+        for (let i = 0; i < this.members.length; i++) {
+          if (this.members[i].department === "프론트엔드") {
+            frontTotalCount = frontTotalCount + 1;
+            frontSum = frontSum + this.members[i].salary;
+          }
+        }
+        this.avgArr[1] = Math.floor(frontSum / frontTotalCount);
+        //백엔드 평균
+        let backSum = 0;
+        let backTotalCount = 0;
+        for (let i = 0; i < this.members.length; i++) {
+          if (this.members[i].department === "백엔드") {
+            backTotalCount = backTotalCount + 1;
+            backSum = backSum + this.members[i].salary;
+          }
+        }
+        this.avgArr[2] = Math.floor(backSum / backTotalCount);
+
+        //데이터에서 영업 부서 숫자 계산 메소드
+        let salesCount = 0;
+        for (let i = 0; i < this.members.length; i++) {
+          this.members[i].department === "영업" && salesCount++;
+        }
+        this.totalNumArr[0] = salesCount;
+
+        //데이터에서 프론트 부서 숫자 계산 메소드
+        let frontCount = 0;
+        for (let i = 0; i < this.members.length; i++) {
+          this.members[i].department === "프론트엔드" && frontCount++;
+        }
+        this.totalNumArr[1] = frontCount;
+
+        //데이터에서 백엔드 부서 숫자 계산 메소드
+        let backCount = 0;
+        for (let i = 0; i < this.members.length; i++) {
+          this.members[i].department === "백엔드" && backCount++;
+        }
+        this.totalNumArr[2] = backCount;
       })
       .catch((error) => {
         console.log(error);
       });
-    //차트에 해당년도 입사자 숫자 계산 메소드
-    for (let i = 0; i < this.members.length; i++) {
-      this.members[i].createDate.slice(0, 4) === "2020" &&
-        this.userNumYears[0]++;
-      this.members[i].createDate.slice(0, 4) === "2021" &&
-        this.userNumYears[1]++;
-      this.members[i].createDate.slice(0, 4) === "2022" &&
-        this.userNumYears[2]++;
-      this.members[i].createDate.slice(0, 4) === "2023" &&
-        this.userNumYears[3]++;
-      this.members[i].createDate.slice(0, 4) === "2024" &&
-        this.userNumYears[4]++;
-    }
     //리스트 세팅
     this.setList();
     // 로그인된 사람의 역할
     if (user !== null) {
-      console.log(user);
       this.loginedPosion = user.auth;
     }
-    console.log(user);
   },
 };
 </script>

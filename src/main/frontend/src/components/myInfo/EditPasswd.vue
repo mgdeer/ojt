@@ -91,10 +91,15 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+//엑시오스 주소
+const api = "http://localhost:8080";
 // 정규식 에러 해결
 // eslint-disable-next-line
 const passwdPattern =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+const user = JSON.parse(sessionStorage.getItem("logined"));
 
 export default {
   name: "editPasswd",
@@ -109,11 +114,25 @@ export default {
     //비밀번호 변경 메소드
     myInfoSubmit() {
       if (this.passwdValidChk && this.passwdSame) {
-        console.log(this.newPasswd, this.newPasswdCheck);
         //데이터 전송 필요.
+        axios
+          .post(`${api}/member/changePwd`, {
+            id: user.sub,
+            newPassword: this.newPasswd,
+          })
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         this.newPasswd = "";
         this.newPasswdCheck = "";
-        sessionStorage.removeItem("setUser");
+        console.log("로그아웃");
+        sessionStorage.removeItem("logined");
+        sessionStorage.removeItem("accessToken");
+        sessionStorage.removeItem("refreshToken");
+        sessionStorage.removeItem("refresh");
         window.location.href = `/`;
       }
     },

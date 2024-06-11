@@ -61,7 +61,7 @@ export default {
         },
         yaxis: {
           min: 0,
-          max: 10,
+          max: 100,
         },
         xaxis: {
           categories: ["2020", "2021", "2022", "2023", "2024"],

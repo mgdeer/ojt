@@ -14,9 +14,7 @@ import VueApexCharts from "vue3-apexcharts";
 export default {
   name: "distributedColumns",
   props: {
-    salesSalaryAvg: Number,
-    frontSalaryAvg: Number,
-    backSalaryAvg: Number,
+    avgArr: Array,
   },
   components: {
     apexchart: VueApexCharts,
@@ -26,7 +24,7 @@ export default {
       series: [
         {
           name: "평균 연봉",
-          data: [this.salesSalaryAvg, this.frontSalaryAvg, this.backSalaryAvg],
+          data: this.avgArr,
         },
       ],
       chartOptions: {

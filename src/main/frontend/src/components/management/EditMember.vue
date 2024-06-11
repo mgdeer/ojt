@@ -62,11 +62,11 @@
           </div>
           <!-- 유효값 경고 -->
           <div style="height: 40px">
-            <div v-show="memberInfo.email.length > 0">
+            <div>
               <p class="pass" v-if="emailValidChk && emailDupCheck">
                 사용 가능한 이메일
               </p>
-              <p class="warning" v-else>사용 불가능한 이메일</p>
+              <p class="warning" v-else>사용 불가능한 이메일(중복 확인 필요)</p>
             </div>
           </div>
           <!-- 유효값 경고 -->
@@ -81,7 +81,7 @@
               placeholder="010-0000-0000"
               aria-label="Userphonenum"
               aria-describedby="basic-addon3"
-              v-model="memberInfo.phoneNum"
+              v-model="memberInfo.phone"
             />
             <button
               type="button"
@@ -93,11 +93,11 @@
           </div>
           <!-- 유효값 경고 -->
           <div style="height: 40px">
-            <div v-show="memberInfo.phoneNum.length > 0">
+            <div>
               <p class="pass" v-if="telValidChk && phoneDupCheck">
                 사용 가능한 번호
               </p>
-              <p class="warning" v-else>사용 불가능한 번호</p>
+              <p class="warning" v-else>사용 불가능한 번호(중복 확인 필요)</p>
             </div>
           </div>
           <!-- 유효값 경고 -->
@@ -116,6 +116,9 @@
             />
           </div>
           <!-- 역할 부서 -->
+          <div style="margin: 0 0 40px 0">
+            역할 및 부서를 다시 선택해주세요.
+          </div>
           <div class="dropdowns" style="margin-bottom: 40px">
             <div class="dropdownBox">
               <h5>역할</h5>
@@ -125,9 +128,27 @@
                   type="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
+                  v-if="memberInfo.role === 'ROLE_ADMINISTRATOR'"
                 >
-                  <i class="bi bi-person-badge-fill"></i> 역할 :
-                  {{ memberInfo.position }}
+                  <i class="bi bi-person-badge-fill"></i> 역할 : 관리자
+                </button>
+                <button
+                  class="btn btn-outline-secondary dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  v-else-if="memberInfo.role === 'ROLE_USER'"
+                >
+                  <i class="bi bi-person-badge-fill"></i> 역할 : 사원
+                </button>
+                <button
+                  class="btn btn-outline-secondary dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  v-else
+                >
+                  <i class="bi bi-person-badge-fill"></i> 역할 : 최고 관리자
                 </button>
                 <ul class="dropdown-menu">
                   <li>
@@ -186,7 +207,6 @@
           <!-- 유효값 경고 -->
           <div v-if="!inputCheck" class="warning">입력 값을 확인해주세요.</div>
           <!-- 유효값 경고 -->
-          <div>수정할 사용자 아이디 확인용 삭제 필요 : {{ editMemberNum }}</div>
           <!-- 모달 안 내용 -->
         </div>
         <div class="modal-footer">
@@ -228,63 +248,93 @@ export default {
   name: "editMember",
   components: {},
   props: {
-    editMemberNum: Number,
+    editMemberInfo: Object,
   },
+
   data() {
     return {
+      checkInfo: {},
       memberInfo: {
         name: "",
         email: "",
-        phoneNum: "",
+        phone: "",
         salary: "",
         position: "",
         department: "",
       },
       inputCheck: true,
       loginedPosion: "",
+      emailDupCheck: false,
+      phoneDupCheck: false,
     };
+  },
+  watch: {
+    editMemberInfo: function (newVal, oldVal) {
+      console.log("message 변경됨:", newVal, oldVal);
+      this.memberInfo = JSON.parse(JSON.stringify(newVal));
+      this.checkInfo = JSON.parse(JSON.stringify(newVal));
+      console.log(this.memberInfo);
+    },
   },
   methods: {
     emailDup() {
-      console.log("이메일 중복 확인 클릭");
-      axios
-        .get(`${api}/member/emailCheck/${this.memberInfo.email}`)
-        .then((response) => {
-          console.log(response.data);
-          this.emailDupCheck = response.data;
-          console.log(this.emailDupCheck);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      if (this.checkInfo.email === this.memberInfo.email) {
+        this.emailDupCheck = true;
+      } else {
+        axios
+          .get(`${api}/member/emailCheck/${this.memberInfo.email}`)
+          .then((response) => {
+            console.log(response.data);
+            this.emailDupCheck = response.data;
+            console.log(this.emailDupCheck);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     phoneNumDup() {
-      console.log("전화번호 중복 확인 클릭");
-      axios
-        .get(`${api}/member/phoneCheck/${this.memberInfo.phoneNum}`)
-        .then((response) => {
-          console.log(response);
-          this.phoneDupCheck = response.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      if (this.checkInfo.phone === this.memberInfo.phone) {
+        this.phoneDupCheck = true;
+      } else {
+        axios
+          .get(`${api}/member/phoneCheck/${this.memberInfo.phone}`)
+          .then((response) => {
+            console.log(response);
+            this.phoneDupCheck = response.data;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     //수정 버튼 눌렀을 때 메소드
     infoSubmit() {
       if (
         this.memberInfo.name.length > 0 &&
         this.memberInfo.salary.length > 0 &&
-        this.memberInfo.position.length > 0 &&
+        this.memberInfo.role.length > 0 &&
         this.memberInfo.department.length > 0 &&
         this.emailValidChk &&
         this.telValidChk
       ) {
         console.log(this.memberInfo);
+        axios
+          .put(
+            `${api}/member/${
+              JSON.parse(JSON.stringify(this.editMemberInfo)).id
+            }`
+          )
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         //데이터 전송 필요.
-        window.location.href = `/management/member/${
-          JSON.parse(sessionStorage.getItem("setUser")).userName
-        }`;
+        // window.location.href = `/management/member/${
+        //   JSON.parse(sessionStorage.getItem("setUser")).userName
+        // }`;
       } else {
         this.inputCheck = false;
       }
@@ -326,7 +376,7 @@ export default {
     },
     // 번호 인풋 유효성 검사
     telValidChk() {
-      if (phoneNumpattern.test(this.memberInfo.phoneNum) === false) {
+      if (phoneNumpattern.test(this.memberInfo.phone) === false) {
         return false;
       } else {
         return true;
@@ -336,7 +386,6 @@ export default {
   mounted() {
     //로그인된 유저의 포지션
     if (user !== null) {
-      console.log(user);
       this.loginedPosion = user.auth;
     }
   },

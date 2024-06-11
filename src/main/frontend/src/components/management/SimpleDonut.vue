@@ -13,16 +13,14 @@ import VueApexCharts from "vue3-apexcharts";
 export default {
   name: "simpleDonut",
   props: {
-    salesNum: Number,
-    frontNum: Number,
-    backNum: Number,
+    totalNumArr: Array,
   },
   components: {
     apexchart: VueApexCharts,
   },
   data() {
     return {
-      series: [this.salesNum, this.frontNum, this.backNum],
+      series: this.totalNumArr,
       chartOptions: {
         chart: {
           type: "donut",

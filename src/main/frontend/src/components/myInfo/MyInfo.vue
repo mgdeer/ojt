@@ -3,12 +3,21 @@
     <div class="myInfoContents">
       <div class="myInfoTitle"><i class="bi bi-person-circle"></i>내 정보</div>
       <div class="infoTexts">
-        <i class="bi bi-person-fill"></i>{{ userInfo.userName }}
+        <i class="bi bi-person-fill"></i>{{ userInfo.name }}
       </div>
       <div class="infoRow">
         <div>
-          <div class="infoTexts">
-            <i class="bi bi-person-badge-fill"></i>{{ userInfo.position }}
+          <div class="infoTexts" v-if="userInfo.role === 'ROLE_CHIEF'">
+            <i class="bi bi-person-badge-fill"></i>최고 관리자
+          </div>
+          <div
+            class="infoTexts"
+            v-else-if="userInfo.role === 'ROLE_ADMINISTRATOR'"
+          >
+            <i class="bi bi-person-badge-fill"></i>관리자
+          </div>
+          <div class="infoTexts" v-else>
+            <i class="bi bi-person-badge-fill"></i>사원
           </div>
         </div>
         <div>
@@ -29,7 +38,7 @@
       </div>
       <div>
         <div class="infoTexts">
-          <i class="bi bi-phone-fill"></i>{{ userInfo.phoneNum }}
+          <i class="bi bi-phone-fill"></i>{{ userInfo.phone }}
         </div>
       </div>
       <!-- 버튼 -->
@@ -83,6 +92,7 @@ export default {
       .get(`${api}/member/${user.sub}`)
       .then((response) => {
         console.log(response);
+        this.userInfo = response.data;
       })
       .catch((error) => {
         console.log(error);
