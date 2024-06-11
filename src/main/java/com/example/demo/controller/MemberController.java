@@ -36,4 +36,8 @@ public class MemberController {
         return ResponseEntity.ok(memberService.reissue(request, tokenRequestDto));
     }
 
+    @GetMapping("/emailCheck/{email}")
+    public ResponseEntity<Boolean> emailCheck(@PathVariable(name = "email") String email) {
+        return memberService.emailCheck(email);
+    }
 }

@@ -176,7 +176,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public boolean emailCheck(String email) {
-        return !memberRepository.existsByEmail(email);
+    public ResponseEntity<Boolean> emailCheck(String email) {
+        return ResponseEntity.ok(!memberRepository.existsByEmail(email));
     }
 }
