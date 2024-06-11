@@ -18,4 +18,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByPhone(String phone);
 
     void deleteById(String id);
+
+    boolean existsByIdAndPassword(String id, String password);
 }

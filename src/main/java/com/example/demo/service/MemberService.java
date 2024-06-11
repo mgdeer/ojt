@@ -1,11 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.MemberRequestDto;
-import com.example.demo.dto.MemberResponseDto;
-import com.example.demo.dto.TokenRequestDto;
+import com.example.demo.dto.*;
+
 import java.util.List;
 
-import com.example.demo.dto.UserCreateForm;
 import com.example.demo.jwt.TokenDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -30,4 +28,5 @@ public interface MemberService {
 
     ResponseEntity<Boolean> emailCheck(String email);
     ResponseEntity<Boolean> phoneCheck(String phone);
+    ResponseEntity<String> changePassword(ChangePasswordDto changePasswordDto);
 }

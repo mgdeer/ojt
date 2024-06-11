@@ -4,6 +4,7 @@ import com.example.demo.Helper;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import com.example.demo.SHA256;
 import com.example.demo.dto.*;
@@ -14,7 +15,6 @@ import com.example.demo.jwt.TokenProvider;
 import com.example.demo.repository.MemberRepository;
 import com.example.demo.repository.RefreshTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
-//import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -183,5 +183,29 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public ResponseEntity<Boolean> phoneCheck(String phone) {
         return ResponseEntity.ok(!memberRepository.existsByPhone(phone));
+    }
+
+    @Override
+    public ResponseEntity<String> changePassword(ChangePasswordDto changePasswordDto) {
+        try {
+            String oldPwd = sha256.encrypt(changePasswordDto.getOldPassword());
+            String id = changePasswordDto.getId();
+            if (!memberRepository.existsByIdAndPassword(id, oldPwd)){
+                return ResponseEntity.status(400).body("잘못된 비밀번호 입력");
+            } else {
+                String newPwd = sha256.encrypt(changePasswordDto.getNewPassword());
+                Optional<Member> member = memberRepository.findByid(id);
+                member.ifPresent(m -> {
+                    m.setPassword(newPwd);
+                    m.setTemp("x");
+                    memberRepository.save(m);
+                });
+                return ResponseEntity.ok("Change password successful");
+            }
+
+        } catch (Exception e){
+            log.error("changePassword failed", e);
+            return ResponseEntity.status(500).body("changePassword failed");
+        }
     }
 }

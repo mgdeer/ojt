@@ -2,13 +2,10 @@ package com.example.demo.controller;
 
 import java.util.List;
 
-import com.example.demo.dto.MemberRequestDto;
-import com.example.demo.dto.MemberResponseDto;
-import com.example.demo.dto.TokenRequestDto;
+import com.example.demo.dto.*;
 import com.example.demo.entity.Member;
 import com.example.demo.jwt.TokenDto;
 import com.example.demo.service.MemberService;
-import com.example.demo.dto.UserCreateForm;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -83,6 +80,9 @@ public class MemberController {
         return member;
     }
 
-
+    @PostMapping("/changePwd")
+    public ResponseEntity<String> changePwd(@RequestBody ChangePasswordDto changePasswordDto){
+        return memberService.changePassword(changePasswordDto);
+    }
 
 }
