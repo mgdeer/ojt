@@ -188,20 +188,15 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public ResponseEntity<String> changePassword(ChangePasswordDto changePasswordDto) {
         try {
-            String oldPwd = sha256.encrypt(changePasswordDto.getOldPassword());
             String id = changePasswordDto.getId();
-            if (!memberRepository.existsByIdAndPassword(id, oldPwd)){
-                return ResponseEntity.status(400).body("잘못된 비밀번호 입력");
-            } else {
-                String newPwd = sha256.encrypt(changePasswordDto.getNewPassword());
-                Optional<Member> member = memberRepository.findByid(id);
-                member.ifPresent(m -> {
-                    m.setPassword(newPwd);
-                    m.setTemp("x");
-                    memberRepository.save(m);
-                });
-                return ResponseEntity.ok("Change password successful");
-            }
+            String newPwd = sha256.encrypt(changePasswordDto.getNewPassword());
+            Optional<Member> member = memberRepository.findByid(id);
+            member.ifPresent(m -> {
+                m.setPassword(newPwd);
+                m.setTemp("x");
+                memberRepository.save(m);
+            });
+            return ResponseEntity.ok("Change password successful");
 
         } catch (Exception e){
             log.error("changePassword failed", e);
