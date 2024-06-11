@@ -365,7 +365,8 @@
                 <td class="tableText">
                   <div
                     v-if="
-                      loginedPosion === '관리자' && member.position === '사원'
+                      loginedPosion === 'ROLE_ADMINISTRATOR' &&
+                      member.position === '사원'
                     "
                     class="listBtns"
                   >
@@ -391,7 +392,7 @@
                     />
                   </div>
                   <div
-                    v-else-if="loginedPosion === '최고 관리자'"
+                    v-else-if="loginedPosion === 'ROLE_CHIEF'"
                     class="listBtns"
                   >
                     <i
@@ -435,15 +436,18 @@ import DeleteMember from "./DeleteMember.vue";
 import SimpleDonut from "./SimpleDonut.vue";
 import DistributedColumns from "./DistributedColumns.vue";
 import StickChart from "./StickChart.vue";
+import axios from "axios";
+
+//엑시오스 주소
+const api = "http://localhost:8080";
+
 //로그인 유져 확인
-const user = JSON.parse(sessionStorage.getItem("setUser"));
+const user = JSON.parse(sessionStorage.getItem("logined"));
 
 export default {
   name: "memberManagement",
   data() {
     return {
-      //화면 가로 크기
-      width: 0,
       //라인 차트 값
       userNumYears: [0, 0, 0, 0, 0],
       //라인 차트 값
@@ -1067,6 +1071,14 @@ export default {
     },
   },
   mounted() {
+    axios
+      .get(`${api}/member/getAllMember`)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     //차트에 해당년도 입사자 숫자 계산 메소드
     for (let i = 0; i < this.members.length; i++) {
       this.members[i].createDate.slice(0, 4) === "2020" &&
@@ -1082,8 +1094,12 @@ export default {
     }
     //리스트 세팅
     this.setList();
-    //로그인된 사람의 역할
-    this.loginedPosion = user.position;
+    // 로그인된 사람의 역할
+    if (user !== null) {
+      console.log(user);
+      this.loginedPosion = user.auth;
+    }
+    console.log(user);
   },
 };
 </script>

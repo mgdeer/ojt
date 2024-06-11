@@ -45,12 +45,6 @@
               v-model="passwd"
             />
           </div>
-
-          <!-- 유효성 경고 -->
-          <p v-if="validCheck && !isValid" class="warning">
-            사원 번호 혹은 비밀번호가 일치 하지 않습니다
-          </p>
-          <!-- 유효성 경고 -->
         </div>
         <!-- 모달 내부 -->
         <!-- 버튼 -->
@@ -63,12 +57,7 @@
           >
             닫기
           </button>
-          <button
-            type="submit"
-            class="btn btn-outline-success"
-            @click="submit"
-            :data-bs-dismiss="isValid && 'modal'"
-          >
+          <button type="submit" class="btn btn-outline-success" @click="submit">
             로그인
           </button>
         </div>
@@ -92,7 +81,6 @@ export default {
       userId: "",
       passwd: "",
       validCheck: false,
-      isValid: false,
       userInfo: {
         userId: 20240001,
         userName: "박현수",
@@ -109,6 +97,10 @@ export default {
     submit() {
       this.validCheck = true;
       //데이터 전송 필요.
+      // 토큰 기한 설정이 무슨말인지? exp로 기한설정이 되어있는거 같던데? exp 시간이 다 지나기전에 한번더 실행해줘야함.
+      // Authorization 을 다시 보내서 유저정보를 받고 로그인 시키면 해당 유저 정보는 세션에 저장? 세선저장하자.
+      //exp이 다되면 accessToken, refreshToken 바디에 넣어서 다시 백엔드 보내줘야하고 post /member/reissue
+      //exp이 계산 필요.
       axios
         .post(`${api}/member/login`, {
           id: this.userId,
@@ -116,39 +108,37 @@ export default {
         })
         .then(function (res) {
           console.log(res);
-          let token = res.data.accessToken;
-          localStorage.setItem("token", token);
-
+          let accessToken = res.data.accessToken;
+          let refreshToken = res.data.refreshToken;
+          sessionStorage.setItem("accessToken", accessToken);
+          sessionStorage.setItem("refreshToken", refreshToken);
           //vue-jwt-decode 사용해서 JWT를 decode 한다.
-          let decodedToken = VueJwtDecode.decode(token);
+          let decodedToken = VueJwtDecode.decode(accessToken);
+          let date = new Date();
+          let refresh = date.setMinutes(date.getMinutes() + 25);
           console.log(decodedToken);
+          console.log("리프레시 시간 :", refresh);
           // 이게 유저정보인지?
           let config = {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${accessToken}`,
             },
-            // 토큰 기한 설정이 무슨말인지? exp로 기한설정이 되어있는거 같던데?
-            // Authorization 을 다시 보내서 유저정보를 받고 로그인 시키면 해당 유저 정보는 세션에 저장?
           };
+          sessionStorage.setItem("logined", JSON.stringify(decodedToken));
+          sessionStorage.setItem("refresh", refresh);
+          //인풋 폼 리셋
+          window.location.href = `/${decodedToken.sub}`;
           axios
             .get("/admin", config)
             .then((response) => {
               console.log("여기", response);
-              // 정보 들어오는게 없는데??
-              let userInfo = {
-                // nickname: response.data.nickname,
-                // username: response.data.username,
-              };
-              console.log(userInfo);
             })
             .catch((error) => {
               console.log("여기", error);
             });
-          //인풋 폼 리셋
-          this.userId = "";
-          this.passwd = "";
         })
         .catch(function (err) {
+          alert("사번 혹은 비밀번호를 확인해주세요");
           console.log(err);
         });
     },

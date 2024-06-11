@@ -8,7 +8,7 @@
       <router-link
         class="navbar-brand"
         v-if="isLogin"
-        :to="`/${userInfo.userName}`"
+        :to="`/${userInfo.userId}`"
         ><span>OJT Project</span></router-link
       >
       <router-link class="navbar-brand" v-else to="/"
@@ -32,7 +32,7 @@
             <router-link
               class="nav-link"
               v-if="isLogin"
-              :to="`/product/${userInfo.userName}`"
+              :to="`/product/${userInfo.userId}`"
               >제품 정보</router-link
             >
             <router-link class="nav-link" v-else to="/product"
@@ -47,18 +47,18 @@
             <router-link
               v-if="isLogin"
               class="nav-link"
-              :to="`/myinfo/${userInfo.userName}`"
+              :to="`/myinfo/${userInfo.userId}`"
               >내 정보</router-link
             >
           </li>
           <li class="nav-item">
             <router-link
               v-if="
-                userInfo.position === '관리자' ||
-                userInfo.position === '최고 관리자'
+                userInfo.position === 'ROLE_ADMINISTRATOR' ||
+                userInfo.position === 'ROLE_CHIEF'
               "
               class="nav-link"
-              :to="`/management/member/${userInfo.userName}`"
+              :to="`/management/member/${userInfo.userId}`"
               >사원 관리</router-link
             >
           </li>
@@ -88,9 +88,17 @@
   </nav>
 </template>
 <script>
+//엑시오스 임포트
+import axios from "axios";
+//엑시오스 주소
+const api = "http://localhost:8080";
+
+import VueJwtDecode from "vue-jwt-decode";
+
 import LoginModal from "./LoginModal.vue";
+
 // 로그인한 유저 정보
-const user = JSON.parse(sessionStorage.getItem("setUser"));
+const user = JSON.parse(sessionStorage.getItem("logined"));
 
 export default {
   name: "VueNav",
@@ -99,7 +107,6 @@ export default {
       isLogin: false,
       userInfo: {
         userId: "",
-        userName: "",
         position: "",
       },
     };
@@ -111,23 +118,59 @@ export default {
     //로그아웃 클릭시 메소드
     logout() {
       console.log("로그아웃");
-      sessionStorage.removeItem("setUser");
+      sessionStorage.removeItem("logined");
+      sessionStorage.removeItem("accessToken");
+      sessionStorage.removeItem("refreshToken");
+      sessionStorage.removeItem("refresh");
       this.isLogin = false;
-      this.userInfo.userId = "";
-      this.userInfo.userName = "";
-      this.userInfo.position = "";
+      this.userInfo = {
+        userId: "",
+        position: "",
+      };
       window.location.href = `/`;
     },
   },
   mounted() {
-    //로그인 정보 관리
+    // 로그인 정보 관리
     if (user !== null) {
       this.isLogin = true;
-      this.userInfo.userId = user.userId;
-      this.userInfo.userName = user.userName;
-      this.userInfo.position = user.position;
+      this.userInfo.userId = user.sub;
+      this.userInfo.position = user.auth;
+      //refresh시간 변동되는거 확확인하면 값 리프레시 필요할것으로 예상
+      let setTimeRun =
+        JSON.parse(sessionStorage.getItem("refresh")) - new Date();
+      setInterval(() => {
+        let accessToken = sessionStorage.getItem("accessToken");
+        let refreshToken = sessionStorage.getItem("refreshToken");
+        //exp이 다되면 accessToken, refreshToken 바디에 넣어서 다시 백엔드 보내줘야하고 post /member/reissue
+        //exp이 계산 필요.
+        axios
+          .post(`${api}/member/reissue`, {
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+          })
+          .then(function (res) {
+            // console.log(res);
+            let accessToken = res.data.accessToken;
+            let refreshToken = res.data.refreshToken;
+            sessionStorage.setItem("accessToken", accessToken);
+            sessionStorage.setItem("refreshToken", refreshToken);
+            //vue-jwt-decode 사용해서 JWT를 decode 한다.
+            let decodedToken = VueJwtDecode.decode(accessToken);
+            let date = new Date();
+            let refresh = date.setMinutes(date.getMinutes() + 25);
+            // console.log(decodedToken);
+            // console.log("리프레시 시간 :", refresh);
+            // 이게 유저정보인지?
+            sessionStorage.setItem("logined", JSON.stringify(decodedToken));
+            sessionStorage.setItem("refresh", refresh);
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      }, setTimeRun);
     }
-    console.log("유져", user);
+    // console.log("유져", user);
   },
 };
 </script>

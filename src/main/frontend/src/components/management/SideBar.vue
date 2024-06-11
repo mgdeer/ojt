@@ -4,36 +4,36 @@
     <ul class="sidebar-nav">
       <div class="sidebar-brand"><i class="bi bi-gear"></i> 관리</div>
       <li>
-        <router-link :to="`/management/member/${userName}`"
+        <router-link :to="`/management/member/${userId}`"
           ><i class="bi bi-people-fill"></i> 사원 관리</router-link
         >
       </li>
       <li>
-        <router-link :to="`/management/product/${userName}`"
+        <router-link :to="`/management/product/${userId}`"
           ><i class="bi bi-boxes"></i> 제품 관리</router-link
         >
       </li>
-      <!-- <li><a href="#">메뉴 3</a></li>
-      <li><a href="#">메뉴 4</a></li>
-      <li><a href="#">메뉴 5</a></li> -->
     </ul>
   </div>
   <!-- /사이드바 -->
 </template>
 <script>
+const user = JSON.parse(sessionStorage.getItem("logined"));
+
 export default {
   name: "sideBar",
   components: {},
   data() {
     return {
-      userName: "",
+      userId: "",
     };
   },
   mounted() {
     //로그인된 유저 정보
-    JSON.parse(sessionStorage.getItem("setUser")) !== null
-      ? (this.userName = JSON.parse(sessionStorage.getItem("setUser")).userName)
-      : (this.userName = "");
+    if (user !== null) {
+      this.userId = user.sub;
+      console.log(this.userId);
+    }
   },
 };
 </script>
