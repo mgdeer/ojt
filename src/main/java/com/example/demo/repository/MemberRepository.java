@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByid(String id);
 
+    @Query("select m from Member m where m.id = :id")
     Optional<Member> findByid(String id);
 
     @Query("select count(*) + 1 from Member m where year(m.createdDate) = year(curdate())")
@@ -18,6 +19,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByPhone(String phone);
 
     void deleteById(String id);
-
-    boolean existsByIdAndPassword(String id, String password);
 }
