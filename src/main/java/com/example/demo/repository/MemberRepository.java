@@ -4,12 +4,12 @@ import com.example.demo.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByid(String id);
 
-    @Query("select m from Member m where m.id = :id")
     Optional<Member> findByid(String id);
 
     @Query("select count(*) + 1 from Member m where year(m.createdDate) = year(curdate())")
@@ -19,4 +19,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByPhone(String phone);
 
     void deleteById(String id);
+
+    @Query("select m from Member m order by field(m.role, 'ROLE_CHEIF', 'ROLE_ADMINISTRATOR', 'ROLE_USER')")
+    List<Member> findAllNewOrder();
 }
