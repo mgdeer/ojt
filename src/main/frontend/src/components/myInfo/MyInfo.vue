@@ -61,6 +61,12 @@
 import EditMyInfo from "./EditMyInfo.vue";
 import EditPasswd from "./EditPasswd.vue";
 
+import axios from "axios";
+//엑시오스 주소
+const api = "http://localhost:8080";
+// 로그인한 유저 정보
+const user = JSON.parse(sessionStorage.getItem("logined"));
+
 export default {
   name: "myInfo",
   components: {
@@ -73,10 +79,14 @@ export default {
     };
   },
   mounted() {
-    //로그인된 유저의 정보
-    if (JSON.parse(sessionStorage.getItem("setUser")) !== null) {
-      this.userInfo = JSON.parse(sessionStorage.getItem("setUser"));
-    }
+    axios
+      .get(`${api}/member/${user.sub}`)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     console.log(this.userInfo);
   },
 };

@@ -52,11 +52,20 @@
               aria-describedby="basic-addon2"
               v-model="memberInfo.email"
             />
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              @click="emailDup"
+            >
+              중복 확인
+            </button>
           </div>
           <!-- 유효값 경고 -->
           <div style="height: 40px">
             <div v-show="memberInfo.email.length > 0">
-              <p class="pass" v-if="emailValidChk">사용 가능한 이메일</p>
+              <p class="pass" v-if="emailValidChk && emailDupCheck">
+                사용 가능한 이메일
+              </p>
               <p class="warning" v-else>사용 불가능한 이메일</p>
             </div>
           </div>
@@ -74,11 +83,20 @@
               aria-describedby="basic-addon3"
               v-model="memberInfo.phoneNum"
             />
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              @click="phoneNumDup"
+            >
+              중복 확인
+            </button>
           </div>
           <!-- 유효값 경고 -->
           <div style="height: 40px">
             <div v-show="memberInfo.phoneNum.length > 0">
-              <p class="pass" v-if="telValidChk">사용 가능한 번호</p>
+              <p class="pass" v-if="telValidChk && phoneDupCheck">
+                사용 가능한 번호
+              </p>
               <p class="warning" v-else>사용 불가능한 번호</p>
             </div>
           </div>
@@ -114,7 +132,7 @@
                 <ul class="dropdown-menu">
                   <li>
                     <div
-                      v-if="loginedPosion === '최고 관리자'"
+                      v-if="loginedPosion === 'ROLE_CHIEF'"
                       class="dropdown-item"
                       @click="setPosition('관리자')"
                     >
@@ -193,6 +211,7 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 // 정규식 에러 해결
 // eslint-disable-next-line
 const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/;
@@ -200,7 +219,10 @@ const phoneNumpattern =
   /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
 
 //세션의 로그인된 유저 정보
-const user = JSON.parse(sessionStorage.getItem("setUser"));
+const user = JSON.parse(sessionStorage.getItem("logined"));
+
+//엑시오스 주소
+const api = "http://localhost:8080";
 
 export default {
   name: "editMember",
@@ -223,6 +245,31 @@ export default {
     };
   },
   methods: {
+    emailDup() {
+      console.log("이메일 중복 확인 클릭");
+      axios
+        .get(`${api}/member/emailCheck/${this.memberInfo.email}`)
+        .then((response) => {
+          console.log(response.data);
+          this.emailDupCheck = response.data;
+          console.log(this.emailDupCheck);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    phoneNumDup() {
+      console.log("전화번호 중복 확인 클릭");
+      axios
+        .get(`${api}/member/phoneCheck/${this.memberInfo.phoneNum}`)
+        .then((response) => {
+          console.log(response);
+          this.phoneDupCheck = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     //수정 버튼 눌렀을 때 메소드
     infoSubmit() {
       if (
@@ -288,7 +335,10 @@ export default {
   },
   mounted() {
     //로그인된 유저의 포지션
-    this.loginedPosion = user.position;
+    if (user !== null) {
+      console.log(user);
+      this.loginedPosion = user.auth;
+    }
   },
 };
 </script>

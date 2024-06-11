@@ -13,7 +13,7 @@ const routes = [
     component: OjtMain
   },
   {
-    path: '/:name',
+    path: '/:userID',
     name: 'ojtMainLogined',
     component: OjtMain
   },
@@ -23,24 +23,24 @@ const routes = [
     component: OjtProduct
   },
   {
-    path: '/product/:name',
+    path: '/product/:userID',
     name: 'ojtProductLogined',
     component: OjtProduct
   },
   //로그인한 유저의 직책에 따라 나뉨
   {
-    path: '/myinfo/:name',
+    path: '/myinfo/:userID',
     name: 'myInfo',
     component: MyInfo
   },
   {
-    path: '/management/member/:name',
+    path: '/management/member/:userID',
     name: 'memberManagement',
     component: MemberManagement
   },
   //회원 관리
   {
-    path: '/management/product/:name',
+    path: '/management/product/:userID',
     name: 'productManagement',
     component: ProductManagement
   }
