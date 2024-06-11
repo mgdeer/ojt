@@ -164,16 +164,16 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.deleteById(id);
     }
 
-    // @Override
-    // public void updateMyInfo(Member member) {
-    //     Member existingMember = memberRepository.findByid(member.getId()).orElse(null);
-    //     if (existingMember != null) {
-    //         existingMember.setEmail(member.getEmail());
-    //         existingMember.setPhone(member.getPhone());
-    //         existingMember.setName(member.getName());
-    //         memberRepository.save(existingMember);
-    //     }
-    // }
+     @Override
+     public void updateMyInfo(Member member) {
+         Member existingMember = memberRepository.findByid(member.getId()).orElse(null);
+         if (existingMember != null) {
+             existingMember.setEmail(member.getEmail());
+             existingMember.setPhone(member.getPhone());
+             existingMember.setName(member.getName());
+             memberRepository.save(existingMember);
+         }
+     }
 
     @Override
     public ResponseEntity<Boolean> emailCheck(String email) {
