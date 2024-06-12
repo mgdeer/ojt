@@ -69,12 +69,9 @@
 <script>
 import EditMyInfo from "./EditMyInfo.vue";
 import EditPasswd from "./EditPasswd.vue";
-
 import axios from "axios";
-//엑시오스 주소
-const api = "http://localhost:8080";
-// 로그인한 유저 정보
-const user = JSON.parse(sessionStorage.getItem("logined"));
+const api = "http://localhost:8080"; //스프링부트 주소
+const user = JSON.parse(sessionStorage.getItem("logined")); // 로그인한 유저 정보
 
 export default {
   name: "myInfo",
@@ -88,6 +85,7 @@ export default {
     };
   },
   mounted() {
+    //유저 정보 받아오기
     axios
       .get(`${api}/member/${user.sub}`)
       .then((response) => {

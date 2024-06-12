@@ -27,18 +27,18 @@ const routes = [
     name: 'ojtProductLogined',
     component: OjtProduct
   },
-  //로그인한 유저의 직책에 따라 나뉨
+  // 내정보
   {
     path: '/myinfo/:userID',
     name: 'myInfo',
     component: MyInfo
   },
+  // 사원, 제품 관리
   {
     path: '/management/member/:userID',
     name: 'memberManagement',
     component: MemberManagement
   },
-  //회원 관리
   {
     path: '/management/product/:userID',
     name: 'productManagement',
@@ -47,6 +47,7 @@ const routes = [
 ]
 
 const router = createRouter({
+  //주소에 #들어가는거 방지
   history: createWebHistory(process.env.BASE_URL),
   routes
 })

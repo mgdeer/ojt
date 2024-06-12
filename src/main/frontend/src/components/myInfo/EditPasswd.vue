@@ -95,14 +95,13 @@
 </template>
 <script>
 import axios from "axios";
-//엑시오스 주소
-const api = "http://localhost:8080";
+const api = "http://localhost:8080"; //스프링부트 주소
+// 유효성 검사
 // 정규식 에러 해결
 // eslint-disable-next-line
 const passwdPattern =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-
-const user = JSON.parse(sessionStorage.getItem("logined"));
+const user = JSON.parse(sessionStorage.getItem("logined")); //유저 정보
 
 export default {
   name: "editPasswd",
@@ -117,7 +116,6 @@ export default {
     //비밀번호 변경 메소드
     myInfoSubmit() {
       if (this.passwdValidChk && this.passwdSame) {
-        //데이터 전송 필요.
         axios
           .post(`${api}/member/changePwd`, {
             id: user.sub,
@@ -139,23 +137,23 @@ export default {
         window.location.href = `/`;
       }
     },
-    //닫기 클릭시 값 리셋 메소드
     reset() {
+      //닫기 클릭시 값 리셋 메소드
       this.newPasswd = "";
       this.newPasswdCheck = "";
     },
   },
   computed: {
-    //비밀번호 유효성 검사
     passwdValidChk() {
+      //비밀번호 유효성 검사
       if (passwdPattern.test(this.newPasswd) === false) {
         return false;
       } else {
         return true;
       }
     },
-    //비밀번호 일치 검사
     passwdSame() {
+      //비밀번호 일치 검사
       if (this.newPasswd === this.newPasswdCheck) {
         return true;
       } else {

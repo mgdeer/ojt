@@ -18,7 +18,7 @@
   <!-- /사이드바 -->
 </template>
 <script>
-const user = JSON.parse(sessionStorage.getItem("logined"));
+const user = JSON.parse(sessionStorage.getItem("logined")); //로그인된 유저 정보
 
 export default {
   name: "sideBar",

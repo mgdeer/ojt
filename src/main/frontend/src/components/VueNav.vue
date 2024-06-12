@@ -59,7 +59,7 @@
               "
               class="nav-link"
               :to="`/management/member/${userInfo.userId}`"
-              >사원 관리</router-link
+              >관리</router-link
             >
           </li>
           <li class="nav-item">
@@ -88,17 +88,11 @@
   </nav>
 </template>
 <script>
-//엑시오스 임포트
 import axios from "axios";
-//엑시오스 주소
-const api = "http://localhost:8080";
-
 import VueJwtDecode from "vue-jwt-decode";
-
 import LoginModal from "./LoginModal.vue";
-
-// 로그인한 유저 정보
-const user = JSON.parse(sessionStorage.getItem("logined"));
+const api = "http://localhost:8080"; //스프링부트 주소
+const user = JSON.parse(sessionStorage.getItem("logined")); // 로그인한 유저 정보
 
 export default {
   name: "VueNav",
@@ -115,8 +109,8 @@ export default {
     LoginModal,
   },
   methods: {
-    //로그아웃 클릭시 메소드
     logout() {
+      //로그아웃 클릭시 메소드
       console.log("로그아웃");
       sessionStorage.removeItem("logined");
       sessionStorage.removeItem("accessToken");
@@ -136,14 +130,12 @@ export default {
       this.isLogin = true;
       this.userInfo.userId = user.sub;
       this.userInfo.position = user.auth;
-      //refresh시간 변동되는거 확확인하면 값 리프레시 필요할것으로 예상
       let setTimeRun =
         JSON.parse(sessionStorage.getItem("refresh")) - new Date();
       setInterval(() => {
+        //시간마다 토큰 리셋
         let accessToken = sessionStorage.getItem("accessToken");
         let refreshToken = sessionStorage.getItem("refreshToken");
-        //exp이 다되면 accessToken, refreshToken 바디에 넣어서 다시 백엔드 보내줘야하고 post /member/reissue
-        //exp이 계산 필요.
         axios
           .post(`${api}/member/reissue`, {
             accessToken: accessToken,
@@ -161,7 +153,6 @@ export default {
             let refresh = date.setMinutes(date.getMinutes() + 25);
             // console.log(decodedToken);
             // console.log("리프레시 시간 :", refresh);
-            // 이게 유저정보인지?
             sessionStorage.setItem("logined", JSON.stringify(decodedToken));
             sessionStorage.setItem("refresh", refresh);
           })

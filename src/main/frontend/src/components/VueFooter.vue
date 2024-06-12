@@ -11,6 +11,7 @@
         <router-link class="footerlink" to="/product">제품 정보</router-link>
       </li>
     </ul>
+    <!-- 서울대 주소입니다. ㅋ -->
     <div class="footerText">
       <div>주소 : 서울특별시 관악구 관악로 1</div>
       <div>전화 : 02-880-5114</div>

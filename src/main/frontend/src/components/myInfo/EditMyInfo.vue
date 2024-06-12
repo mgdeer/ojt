@@ -109,15 +109,14 @@
 </template>
 <script>
 import axios from "axios";
-//엑시오스 주소
-const api = "http://localhost:8080";
+const api = "http://localhost:8080"; // 스프링부트 주소
+// 유효성 검사
 // 정규식 에러 해결
 // eslint-disable-next-line
 const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/;
 const phoneNumpattern =
   /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
-
-const user = JSON.parse(sessionStorage.getItem("logined"));
+const user = JSON.parse(sessionStorage.getItem("logined")); //로그인된 유저 정보
 
 export default {
   name: "editMyInfo",
@@ -125,7 +124,8 @@ export default {
   data() {
     return {
       memberInfo: {
-        id: user.sub,
+        //입력 받을 값
+        id: user.sub, //아이디는 유저정보에서 가져옴
         name: "",
         email: "",
         phone: "",
@@ -142,7 +142,6 @@ export default {
         this.telValidChk
       ) {
         console.log(this.memberInfo);
-        //데이터 전송 필요. PutMapping("/me")
         axios
           .put(`${api}/member/me`, this.memberInfo)
           .then((response) => {
@@ -157,9 +156,9 @@ export default {
           email: "",
           phone: "",
         };
-        // window.location.href = `/myinfo/${
-        //   JSON.parse(sessionStorage.getItem("logined")).sub
-        // }`;
+        window.location.href = `/myinfo/${
+          JSON.parse(sessionStorage.getItem("logined")).sub
+        }`;
       } else {
         this.inputCheck = false;
       }
@@ -173,6 +172,7 @@ export default {
       this.memberInfo.department = v;
     },
     reset() {
+      // 닫기 클릭시 메소드
       this.memberInfo = {
         name: "",
         email: "",

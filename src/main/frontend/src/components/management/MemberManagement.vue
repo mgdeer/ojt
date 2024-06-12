@@ -7,7 +7,7 @@
     <div id="page-content-wrapper">
       <div class="container-fluid">
         <h1><i class="bi bi-people-fill"></i> 사원 관리</h1>
-        <!-- 토탈 수치 -->
+        <!-- 역할 별 사원 수 -->
         <div class="summaryInfo">
           <div class="chiefNum">
             <div class="numsTitle">최고 관리자</div>
@@ -22,7 +22,7 @@
             <div class="nums">{{ userNum }}</div>
           </div>
         </div>
-        <!-- 토탈 수치 -->
+        <!-- 역할 별 사원 수 -->
         <!-- 그래프 -->
         <div class="charts">
           <SimpleDonut class="circle" :totalNumArr="totalNumArr" />
@@ -38,7 +38,7 @@
         <!-- 그래프 -->
         <!-- 체크박스, 서치 -->
         <ul class="options list-group">
-          <!-- 열할 체크박스 -->
+          <!-- 역할 체크박스 -->
           <li class="searchOptions list-group-item">
             <div class="headerTitle">역할 필터</div>
             <div class="form-check">
@@ -90,7 +90,7 @@
               <label class="form-check-label" for="userCheckbox"> 사원 </label>
             </div>
           </li>
-          <!-- 열할 체크박스 -->
+          <!-- 역할 체크박스 -->
           <!-- 부서 체크박스 -->
           <li class="searchOptions list-group-item">
             <div class="headerTitle">부서 필터</div>
@@ -145,6 +145,7 @@
               </label>
             </div>
           </li>
+          <!-- 부서 체크박스 -->
           <!-- 서치바 -->
           <li class="searchInput list-group-item">
             <div class="headerTitle">이름 검색</div>
@@ -187,7 +188,6 @@
           </button>
         </div>
         <!-- 필터링 버튼 -->
-        <!-- 부서 체크박스 -->
         <!-- 체크박스, 서치 -->
         <!-- 리스트 해더 -->
         <div class="listHeader">
@@ -217,6 +217,7 @@
                 <th class="tableText" scope="col">이 름</th>
                 <th class="tableText" scope="col">역 할</th>
                 <th class="tableText" scope="col">부 서</th>
+                <!-- 연봉 정렬 -->
                 <th class="tableText" scope="col">
                   <div class="dropdown">
                     <div
@@ -227,6 +228,14 @@
                       연 봉 <i class="bi bi-caret-down-fill"></i>
                     </div>
                     <ul class="dropdown-menu">
+                      <li>
+                        <div
+                          class="dropdown-item"
+                          @click="salarySort('초기화')"
+                        >
+                          초기화
+                        </div>
+                      </li>
                       <li>
                         <div
                           class="dropdown-item"
@@ -246,8 +255,10 @@
                     </ul>
                   </div>
                 </th>
+                <!-- 연봉 정렬 -->
                 <th class="tableText" scope="col">연락처</th>
                 <th class="tableText" scope="col">수정 날짜</th>
+                <!--생성 날짜 정렬 -->
                 <th class="tableText" scope="col">
                   <div class="dropdown">
                     <div
@@ -258,6 +269,11 @@
                       생성 날짜 <i class="bi bi-caret-down-fill"></i>
                     </div>
                     <ul class="dropdown-menu">
+                      <li>
+                        <div class="dropdown-item" @click="dateSort('초기화')">
+                          초기화
+                        </div>
+                      </li>
                       <li>
                         <div
                           class="dropdown-item"
@@ -277,6 +293,8 @@
                     </ul>
                   </div>
                 </th>
+                <!--생성 날짜 정렬 -->
+                <!--상태 정렬 -->
                 <th class="tableText" scope="col">
                   <div class="dropdown">
                     <div
@@ -311,6 +329,7 @@
                     </ul>
                   </div>
                 </th>
+                <!--상태 정렬 -->
                 <th class="tableText" scope="col">수정 및 삭제</th>
               </tr>
             </thead>
@@ -349,11 +368,13 @@
                   ></i>
                   <i v-else style="color: red" class="bi bi-x-circle"></i>
                 </td>
+                <!-- 비밀번호를 변경 했을 경우 채크 아닐경우 x -->
+                <!-- 수정 삭제 버튼-->
                 <td class="tableText">
                   <div
                     v-if="
                       loginedPosion === 'ROLE_ADMINISTRATOR' &&
-                      member.role === '사원'
+                      member.role === 'ROLE_USER'
                     "
                     class="listBtns"
                   >
@@ -404,6 +425,7 @@
                     />
                   </div>
                 </td>
+                <!-- 수정 삭제 버튼-->
               </tr>
             </tbody>
             <!-- 테이블 바디 -->
@@ -425,51 +447,39 @@ import DistributedColumns from "./DistributedColumns.vue";
 import StickChart from "./StickChart.vue";
 import axios from "axios";
 
-//엑시오스 주소
-const api = "http://localhost:8080";
-
-//로그인 유져 확인
-const user = JSON.parse(sessionStorage.getItem("logined"));
+const api = "http://localhost:8080"; //스프링부트 주소
+const user = JSON.parse(sessionStorage.getItem("logined")); //로그인 유져 정보
 
 export default {
   name: "memberManagement",
   data() {
     return {
-      //라인 차트 값
-      userNumYears: [0, 0, 0, 0, 0],
-      maxNum: 0,
-      //막대 차트 값
-      avgArr: [0, 0, 0],
-      //원형 차트 값
-      totalNumArr: [0, 0, 0],
-
-      loginedPosion: "",
-      editMemberInfo: {},
-      deleteMemberNum: "",
-      deleteMemberName: "",
-      salarySortValue: "",
-      //필터 채크박스
+      userNumYears: [0, 0, 0, 0, 0], //라인 차트 값
+      maxNum: 0, //라인 차트 값
+      avgArr: [0, 0, 0], //막대 차트 값
+      totalNumArr: [0, 0, 0], //원형 차트 값
+      loginedPosion: "", //로그인한 유저의 역할
+      editMemberInfo: {}, //수정될 유저의 정보
+      deleteMemberNum: "", //삭제될 유저의 정보
+      deleteMemberName: "", //삭제될 유저의 정보
       checkedPosition: {
+        //필터 포지션 채크박스 기본값
         allCheckPosition: true,
         chiefCheckPosition: false,
         managerCheckPosition: false,
         userCheckPosition: false,
       },
       checkedDepartment: {
+        //필터 부서 채크박스 기본값
         allCheckDepartment: true,
         salesCheckDepartment: false,
         frontCheckDepartment: false,
         backCheckDepartment: false,
       },
-      //필터 채크박스
-      //검색 인풋
-      searchNameValue: "",
-      //검색 인풋
-      members: [],
-      //필터 적용 배열
-      positionFilter: [],
-      finalFilter: [],
-      //필터 적용 배열
+      searchNameValue: "", //검색 인풋
+      members: [], // 벡엔드에서 받아오는 값 배열
+      positionFilter: [], //필터 적용 배열
+      finalFilter: [], //최종 보여줄 배열
     };
   },
   components: {
@@ -697,6 +707,8 @@ export default {
         this.finalFilter = this.finalFilter.sort((a, b) => a.salary - b.salary);
       } else if (e === "내림 차순") {
         this.finalFilter = this.finalFilter.sort((a, b) => b.salary - a.salary);
+      } else {
+        window.location.href = `/management/member/${user.sub}`;
       }
       console.log(e);
     },
@@ -714,6 +726,8 @@ export default {
             new Date(b.createdDate).getTime() -
             new Date(a.createdDate).getTime()
         );
+      } else {
+        window.location.href = `/management/member/${user.sub}`;
       }
       console.log(e);
     },
@@ -721,10 +735,10 @@ export default {
     isEdited(e) {
       if (e === "수정완료") {
         this.finalFilter = this.members;
-        this.finalFilter = this.finalFilter.filter((v) => v.isValid === true);
+        this.finalFilter = this.finalFilter.filter((v) => v.temp === "x");
       } else if (e === "수정전") {
         this.finalFilter = this.members;
-        this.finalFilter = this.finalFilter.filter((v) => v.isValid === false);
+        this.finalFilter = this.finalFilter.filter((v) => v.temp === "o");
       } else {
         this.finalFilter = this.members;
       }
@@ -732,11 +746,6 @@ export default {
     },
   },
   computed: {
-    //날짜 포맷
-    dateFormat(v) {
-      let date = new Date(v);
-      return date.toLocaleString();
-    },
     //데이터에서 최고 관리자 숫자 계산 메소드
     chiefNum() {
       let count = 0;
@@ -768,6 +777,7 @@ export default {
       .then((response) => {
         // console.log(response.data);
         this.members.push(...response.data);
+        //해당 년도에 입사한 사람의 숫자 계산
         for (let i = 0; i < this.members.length; i++) {
           this.members[i].createdDate.slice(0, 4) === "2020" &&
             this.userNumYears[0]++;
@@ -783,57 +793,39 @@ export default {
         this.maxNum = Math.max(...this.userNumYears);
         // console.log(this.userNumYears);
         // console.log(this.maxNum);
-        //데이터에서 연봉 평균 계산 메소드
-        //영업 평균
-        let salesSum = 0;
-        let salesTotalCount = 0;
-        for (let i = 0; i < this.members.length; i++) {
-          if (this.members[i].department === "영업") {
-            salesTotalCount = salesTotalCount + 1;
-            salesSum = salesSum + this.members[i].salary;
-          }
-        }
-        this.avgArr[0] = Math.floor(salesSum / salesTotalCount);
-        //프론트 평균
-        let frontSum = 0;
-        let frontTotalCount = 0;
-        for (let i = 0; i < this.members.length; i++) {
-          if (this.members[i].department === "프론트엔드") {
-            frontTotalCount = frontTotalCount + 1;
-            frontSum = frontSum + this.members[i].salary;
-          }
-        }
-        this.avgArr[1] = Math.floor(frontSum / frontTotalCount);
-        //백엔드 평균
-        let backSum = 0;
-        let backTotalCount = 0;
-        for (let i = 0; i < this.members.length; i++) {
-          if (this.members[i].department === "백엔드") {
-            backTotalCount = backTotalCount + 1;
-            backSum = backSum + this.members[i].salary;
-          }
-        }
-        this.avgArr[2] = Math.floor(backSum / backTotalCount);
 
-        //데이터에서 영업 부서 숫자 계산 메소드
-        let salesCount = 0;
+        //데이터에서 연봉 평균 계산 메소드
+        let salesSum = 0; //영업 총합
+        let salesTotalCount = 0; //영업 사원 총합
+        let frontSum = 0; //프론트 총합
+        let frontTotalCount = 0; //프론트 사원 총합
+        let backSum = 0; //벡엔드 총합
+        let backTotalCount = 0; //벡엔드 사원 총합
+        for (let i = 0; i < this.members.length; i++) {
+          this.members[i].department === "영업" &&
+            ((salesTotalCount = salesTotalCount + 1),
+            (salesSum = salesSum + this.members[i].salary));
+          this.members[i].department === "프론트엔드" &&
+            ((frontTotalCount = frontTotalCount + 1),
+            (frontSum = frontSum + this.members[i].salary));
+          this.members[i].department === "백엔드" &&
+            ((backTotalCount = backTotalCount + 1),
+            (backSum = backSum + this.members[i].salary));
+        }
+        this.avgArr[0] = Math.floor(salesSum / salesTotalCount); //각 부서별 연봉 평균
+        this.avgArr[1] = Math.floor(frontSum / frontTotalCount); //각 부서별 연봉 평균
+        this.avgArr[2] = Math.floor(backSum / backTotalCount); //각 부서별 연봉 평균
+
+        let salesCount = 0; //영업 부서 사원 숫자
+        let frontCount = 0; //프론트 부서 사원 숫자
+        let backCount = 0; //백엔드 부서 사원 숫자
         for (let i = 0; i < this.members.length; i++) {
           this.members[i].department === "영업" && salesCount++;
-        }
-        this.totalNumArr[0] = salesCount;
-
-        //데이터에서 프론트 부서 숫자 계산 메소드
-        let frontCount = 0;
-        for (let i = 0; i < this.members.length; i++) {
           this.members[i].department === "프론트엔드" && frontCount++;
-        }
-        this.totalNumArr[1] = frontCount;
-
-        //데이터에서 백엔드 부서 숫자 계산 메소드
-        let backCount = 0;
-        for (let i = 0; i < this.members.length; i++) {
           this.members[i].department === "백엔드" && backCount++;
         }
+        this.totalNumArr[0] = salesCount;
+        this.totalNumArr[1] = frontCount;
         this.totalNumArr[2] = backCount;
       })
       .catch((error) => {

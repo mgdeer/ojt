@@ -49,11 +49,8 @@
   </div>
 </template>
 <script>
-//엑시오스 임포트
-import axios from "axios";
-
-//엑시오스 주소
-const api = "http://localhost:8080";
+import axios from "axios"; //엑시오스 임포트
+const api = "http://localhost:8080"; //스프링부트 주소
 
 export default {
   name: "deleteMember",
@@ -64,7 +61,7 @@ export default {
   },
   methods: {
     deleteUser() {
-      //백엔드 연동 필요
+      //삭제 클릭시 메소드
       axios
         .delete(`${api}/member/${this.deleteMemberNum}`)
         .then((response) => {

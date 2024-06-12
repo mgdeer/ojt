@@ -67,12 +67,9 @@
   </div>
 </template>
 <script>
-//엑시오스 임포트
-import axios from "axios";
-//jwt
-import VueJwtDecode from "vue-jwt-decode";
-//엑시오스 주소
-const api = "http://localhost:8080";
+import axios from "axios"; // 로그인한 유저 정보
+import VueJwtDecode from "vue-jwt-decode"; //jwt
+const api = "http://localhost:8080"; //스프링부트 주소
 
 export default {
   name: "loginModal",
@@ -84,10 +81,9 @@ export default {
     };
   },
   methods: {
-    //로그인 클릭시 메소드
     submit() {
+      //로그인 클릭시 메소드
       this.validCheck = true;
-      //데이터 전송 필요.
       axios
         .post(`${api}/member/login`, {
           id: this.userId,
@@ -105,7 +101,6 @@ export default {
           let refresh = date.setMinutes(date.getMinutes() + 25);
           console.log(decodedToken);
           console.log("리프레시 시간 :", refresh);
-          // 이게 유저정보인지?
           let config = {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -114,7 +109,12 @@ export default {
           sessionStorage.setItem("logined", JSON.stringify(decodedToken));
           sessionStorage.setItem("refresh", refresh);
           //화면 전환
-          window.location.href = `/${decodedToken.sub}`;
+          if (JSON.parse(sessionStorage.getItem("logined")).temp === "x") {
+            window.location.href = `/${decodedToken.sub}`;
+          } else {
+            alert("비밀번호를 변경 해주세요");
+            window.location.href = `/myinfo/${decodedToken.sub}`;
+          }
           axios
             .get("/admin", config)
             .then((response) => {
@@ -129,8 +129,8 @@ export default {
           console.log(err);
         });
     },
-    // 닫기 클릭시 메소드
     reset() {
+      // 닫기 클릭시 메소드
       this.validCheck = false;
       this.userId = "";
       this.passwd = "";

@@ -210,20 +210,16 @@
   </div>
 </template>
 <script>
-//엑시오스 임포트
-import axios from "axios";
+import axios from "axios"; //엑시오스 임포트
 
-// 정규식 에러 해결
+// 유효성 검사 정규식
+// 아래 주석은 정규식 에러 해결을 위한 주석
 // eslint-disable-next-line
 const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/;
 const phoneNumpattern =
   /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
-
-//세션의 로그인된 유저 정보
-const user = JSON.parse(sessionStorage.getItem("logined"));
-
-//엑시오스 주소
-const api = "http://localhost:8080";
+const user = JSON.parse(sessionStorage.getItem("logined")); //로그인된 유저 정보
+const api = "http://localhost:8080"; //스프링부트 주소
 
 export default {
   name: "addMember",
@@ -231,6 +227,7 @@ export default {
   data() {
     return {
       memberInfo: {
+        //맴버 정보 인풋
         name: "",
         email: "",
         phoneNum: "",
@@ -238,14 +235,15 @@ export default {
         position: "",
         department: "",
       },
-      loginedPosion: "",
-      emailDupCheck: false,
-      phoneDupCheck: false,
-      inputCheck: true,
+      loginedPosion: "", //로그인된 유저의 역할 정보
+      emailDupCheck: false, //이메일 중복 체크
+      phoneDupCheck: false, //전화번호 중복 체크
+      inputCheck: true, //인풋 값 체크 시작
     };
   },
   methods: {
     emailDup() {
+      //이메일 중복 확인 메소드
       console.log("이메일 중복 확인 클릭");
       axios
         .get(`${api}/member/emailCheck/${this.memberInfo.email}`)
@@ -259,6 +257,7 @@ export default {
         });
     },
     phoneNumDup() {
+      //전화번호 중복 확인 메소드
       console.log("전화번호 중복 확인 클릭");
       axios
         .get(`${api}/member/phoneCheck/${this.memberInfo.phoneNum}`)
@@ -270,8 +269,8 @@ export default {
           console.log(error);
         });
     },
-    //추가 버튼 눌렀을 때 메소드
     infoSubmit() {
+      //추가 버튼 눌렀을 때 메소드
       if (
         this.memberInfo.name.length > 0 &&
         this.memberInfo.salary > 0 &&
@@ -303,47 +302,42 @@ export default {
           .catch((error) => {
             console.log(error);
           });
-        //데이터 전송 필요.
       } else {
         this.inputCheck = false;
       }
     },
-    //닫기 버튼 눌렀을 때 메소드
     reset() {
+      //닫기 버튼 눌렀을 때 메소드
       this.inputCheck = true;
       this.memberInfo = {
-        id: 0,
-        passwd: "",
         name: "",
         email: "",
         phoneNum: "",
-        salary: "",
+        salary: 0,
         position: "",
         department: "",
-        createDate: "",
-        editeDate: "",
       };
     },
-    // 역할 값 메소드
     setPosition(v) {
+      // 역할 값 바인딩을 위한 메소드
       this.memberInfo.position = v;
     },
-    // 부서 값 메소드
     setDepartment(v) {
+      // 부서 값 바인딩을 위한 메소드
       this.memberInfo.department = v;
     },
   },
   computed: {
-    // 이메일 인풋 유효성 검사
     emailValidChk() {
+      // 이메일 인풋 유효성 검사
       if (emailPattern.test(this.memberInfo.email) === false) {
         return false;
       } else {
         return true;
       }
     },
-    // 전화번호 인풋 유효성 검사
     telValidChk() {
+      // 전화번호 인풋 유효성 검사
       if (phoneNumpattern.test(this.memberInfo.phoneNum) === false) {
         return false;
       } else {

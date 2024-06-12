@@ -237,18 +237,15 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+import axios from "axios"; //엑시오스
+// 유효성 검사 정규식
 // 정규식 에러 해결
 // eslint-disable-next-line
 const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/;
 const phoneNumpattern =
   /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
-
-//세션의 로그인된 유저 정보
-const user = JSON.parse(sessionStorage.getItem("logined"));
-
-//엑시오스 주소
-const api = "http://localhost:8080";
+const user = JSON.parse(sessionStorage.getItem("logined")); //로그인된 유저 정보
+const api = "http://localhost:8080"; //스프링부트 주소
 
 export default {
   name: "editMember",
@@ -259,8 +256,9 @@ export default {
 
   data() {
     return {
-      checkInfo: {},
+      checkInfo: {}, //값 변경 확인을 위한 변경전 정보
       memberInfo: {
+        //인풋 값
         name: "",
         email: "",
         phone: "",
@@ -268,13 +266,14 @@ export default {
         role: "",
         department: "",
       },
-      inputCheck: true,
-      loginedPosion: "",
-      emailDupCheck: false,
-      phoneDupCheck: false,
+      inputCheck: true, //변경 확인
+      loginedPosion: "", //로그인된 유저의 역할
+      emailDupCheck: false, //중복 확인
+      phoneDupCheck: false, //중복 확인
     };
   },
   watch: {
+    //watch를 통해 editMemberInfo 값이 변경되면 아래 매소드 실행
     editMemberInfo: function (newVal, oldVal) {
       console.log("message 변경됨:", newVal, oldVal);
       this.memberInfo = JSON.parse(JSON.stringify(newVal));
@@ -284,6 +283,7 @@ export default {
   },
   methods: {
     emailDup() {
+      //이메일 중복 확인
       if (this.checkInfo.email === this.memberInfo.email) {
         this.emailDupCheck = true;
       } else {
@@ -300,6 +300,7 @@ export default {
       }
     },
     phoneNumDup() {
+      //전화번호 중복확인
       if (this.checkInfo.phone === this.memberInfo.phone) {
         this.phoneDupCheck = true;
       } else {
@@ -314,8 +315,9 @@ export default {
           });
       }
     },
-    //수정 버튼 눌렀을 때 메소드
+
     infoSubmit() {
+      //수정 버튼 눌렀을 때 메소드
       if (this.memberInfo.role === "관리자") {
         this.memberInfo.role = "ROLE_ADMINISTRATOR";
       } else {
@@ -343,7 +345,6 @@ export default {
           .catch((error) => {
             console.log(error);
           });
-        //데이터 전송 필요.
         window.location.href = `/management/member/${
           JSON.parse(sessionStorage.getItem("logined")).sub
         }`;
@@ -351,16 +352,17 @@ export default {
         this.inputCheck = false;
       }
     },
-    // 역할 값 메소드
     setPosition(v) {
+      // 역할 값 바인딩을 위한 메소드
       this.memberInfo.role = v;
     },
-    // 부서 값 메소드
     setDepartment(v) {
+      // 부서 값 바인딩을 위한  메소드
       this.memberInfo.department = v;
     },
-    //닫기 버튼 눌렀을 때 메소드
+
     reset() {
+      //닫기 버튼 눌렀을 때 메소드
       this.inputCheck = true;
       //받아온 기본 값으로 변경
       this.memberInfo = {
@@ -374,16 +376,16 @@ export default {
     },
   },
   computed: {
-    // 이메일 인풋 유효성 검사
     emailValidChk() {
+      // 이메일 인풋 유효성 검사
       if (emailPattern.test(this.memberInfo.email) === false) {
         return false;
       } else {
         return true;
       }
     },
-    // 번호 인풋 유효성 검사
     telValidChk() {
+      // 번호 인풋 유효성 검사
       if (phoneNumpattern.test(this.memberInfo.phone) === false) {
         return false;
       } else {
