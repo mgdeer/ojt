@@ -2,21 +2,20 @@ package com.example.demo.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 @Getter
 @NoArgsConstructor
-@Entity
+@RedisHash(value = "refresh", timeToLive = 604800)
 public class RefreshToken {
 
     @Id
-    @Column(name = "rt_key")
     private String key;
 
-    @Column(name = "rt_value")
     private String value;
 
     private String ip;
