@@ -16,6 +16,7 @@ public interface MemberService {
     MemberResponseDto MemberInfo(String id);
     MemberResponseDto updateMemberInfo(String id, MemberUpdateDto memberUpdateDto);
 
+
     TokenDto login(HttpServletRequest request, MemberRequestDto memberRequestDto);
 
     TokenDto reissue(HttpServletRequest request, TokenRequestDto tokenRequestDto);
@@ -26,8 +27,8 @@ public interface MemberService {
     Member findById(String id);
 //    void update(Member member);
     void delete(String id);
-    MemberResponseDto updateMyInfo(String id, MemberUpdateDto memberUpdateDto);
-
+    // MemberResponseDto updateMyInfo(String id, MemberUpdateDto memberUpdateDto);
+    ChangeMyInfoDto updateMyInfo(ChangeMyInfoDto changeMyInfoDto);
     ResponseEntity<Boolean> emailCheck(String email);
     ResponseEntity<Boolean> phoneCheck(String phone);
     ResponseEntity<String> changePassword(ChangePasswordDto changePasswordDto);

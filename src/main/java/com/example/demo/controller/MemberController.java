@@ -70,21 +70,14 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    // @GetMapping("/me/{id}")
-    // public Member myInfo(@PathVariable String id) {
-    //     return memberService.findById(id);
-    // }
-
     // @PutMapping("/me")
     // public ResponseEntity<MemberResponseDto> updateMyInfo(@RequestBody MemberUpdateDto memberUpdateDto, HttpServletRequest request) {
     //     String userId = (String) request.getSession().getAttribute("userId");
     //     return ResponseEntity.ok(memberService.updateMyInfo(userId, memberUpdateDto));
     // }
     @PutMapping("/me")
-    public ResponseEntity<MemberResponseDto> updateMyInfo(@RequestBody MemberUpdateDto memberUpdateDto, HttpServletRequest request) {
-
-        String userId = tokenProvider.getUserIdFromToken(request);
-        return ResponseEntity.ok(memberService.updateMemberInfo(userId, memberUpdateDto));
+    public ResponseEntity<ChangeMyInfoDto> updateMyInfo(@RequestBody ChangeMyInfoDto changeMyInfoDto) {
+        return ResponseEntity.ok(memberService.updateMyInfo(changeMyInfoDto));
     }
 
     @PostMapping("/changePwd")

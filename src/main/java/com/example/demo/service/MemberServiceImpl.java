@@ -181,20 +181,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    @Transactional
-    public MemberResponseDto updateMyInfo(String id, MemberUpdateDto memberUpdateDto) {
-        Member member = memberRepository.findByid(id)
-            .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
-
-        member.setName(memberUpdateDto.getName());
-        member.setEmail(memberUpdateDto.getEmail());
-        member.setPhone(memberUpdateDto.getPhone());
-        memberRepository.save(member);
-
-        return MemberResponseDto.of(member);
-    }
-
-    @Override
     public ResponseEntity<Boolean> emailCheck(String email) {
         return ResponseEntity.ok(!memberRepository.existsByEmail(email));
     }
@@ -222,5 +208,20 @@ public class MemberServiceImpl implements MemberService {
             log.error("changePassword failed", e);
             return ResponseEntity.status(500).body("changePassword failed");
         }
+    }
+
+    @Override
+    @Transactional
+    public ChangeMyInfoDto updateMyInfo(ChangeMyInfoDto changeMyInfoDto) {
+        String id = changeMyInfoDto.getId();
+        Member member = memberRepository.findByid(id)
+            .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
+
+        member.setName(changeMyInfoDto.getName());
+        member.setEmail(changeMyInfoDto.getEmail());
+        member.setPhone(changeMyInfoDto.getPhone());
+        memberRepository.save(member);
+
+        return changeMyInfoDto;
     }
 }
