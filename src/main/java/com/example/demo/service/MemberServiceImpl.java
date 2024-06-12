@@ -84,8 +84,10 @@ public class MemberServiceImpl implements MemberService {
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
+        Optional<Member> member = memberRepository.findByid(memberRequestDto.getId());
+
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication, member.get().getTemp());
 
         // 4. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
@@ -123,9 +125,10 @@ public class MemberServiceImpl implements MemberService {
         String currentIpAddress = Helper.getClientIp(request);
         if (refreshToken.getIp().equals(currentIpAddress)) {
 
+            Optional<Member> member = memberRepository.findByid(authentication.getName());
 
             // 5. 새로운 토큰 생성
-            TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+            TokenDto tokenDto = tokenProvider.generateTokenDto(authentication, member.get().getTemp());
 
             // 6. 저장소 정보 업데이트
             RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
