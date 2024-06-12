@@ -180,16 +180,19 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.deleteById(id); // 여기서 deleteById를 deleteByid로 수정
     }
 
-     @Override
-     public void updateMyInfo(Member member) {
-         Member existingMember = memberRepository.findByid(member.getId()).orElse(null);
-         if (existingMember != null) {
-             existingMember.setEmail(member.getEmail());
-             existingMember.setPhone(member.getPhone());
-             existingMember.setName(member.getName());
-             memberRepository.save(existingMember);
-         }
-     }
+    @Override
+    @Transactional
+    public MemberResponseDto updateMyInfo(String id, MemberUpdateDto memberUpdateDto) {
+        Member member = memberRepository.findByid(id)
+            .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
+
+        member.setName(memberUpdateDto.getName());
+        member.setEmail(memberUpdateDto.getEmail());
+        member.setPhone(memberUpdateDto.getPhone());
+        memberRepository.save(member);
+
+        return MemberResponseDto.of(member);
+    }
 
     @Override
     public ResponseEntity<Boolean> emailCheck(String email) {

@@ -67,15 +67,15 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/me/{id}")
-    public Member myInfo(@PathVariable String id) {
-        return memberService.findById(id);
-    }
+    // @GetMapping("/me/{id}")
+    // public Member myInfo(@PathVariable String id) {
+    //     return memberService.findById(id);
+    // }
 
     @PutMapping("/me")
-    public Member updateMyInfo(@RequestBody Member member) {
-        memberService.updateMyInfo(member);
-        return member;
+    public ResponseEntity<MemberResponseDto> updateMyInfo(@RequestBody MemberUpdateDto memberUpdateDto, HttpServletRequest request) {
+        String userId = (String) request.getSession().getAttribute("userId");
+        return ResponseEntity.ok(memberService.updateMyInfo(userId, memberUpdateDto));
     }
 
     @PostMapping("/changePwd")

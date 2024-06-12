@@ -26,7 +26,7 @@ public interface MemberService {
     Member findById(String id);
 //    void update(Member member);
     void delete(String id);
-    void updateMyInfo(Member member);
+    MemberResponseDto updateMyInfo(String id, MemberUpdateDto memberUpdateDto);
 
     ResponseEntity<Boolean> emailCheck(String email);
     ResponseEntity<Boolean> phoneCheck(String phone);
