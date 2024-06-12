@@ -72,12 +72,12 @@
               placeholder="010-0000-0000"
               aria-label="Userphonenum"
               aria-describedby="basic-addon3"
-              v-model="memberInfo.phoneNum"
+              v-model="memberInfo.phone"
             />
           </div>
           <!-- 유효값 경고 -->
           <div style="height: 40px">
-            <div v-show="memberInfo.phoneNum.length > 0">
+            <div v-show="memberInfo.phone.length > 0">
               <p class="pass" v-if="telValidChk">사용 가능한 번호</p>
               <p class="warning" v-else>사용 불가능한 번호</p>
             </div>
@@ -108,11 +108,16 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+//엑시오스 주소
+const api = "http://localhost:8080";
 // 정규식 에러 해결
 // eslint-disable-next-line
 const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/;
 const phoneNumpattern =
   /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
+
+const user = JSON.parse(sessionStorage.getItem("logined"));
 
 export default {
   name: "editMyInfo",
@@ -120,16 +125,10 @@ export default {
   data() {
     return {
       memberInfo: {
-        id: 0,
-        passwd: "",
+        id: user.sub,
         name: "",
         email: "",
-        phoneNum: "",
-        salary: "",
-        position: "",
-        department: "",
-        createDate: "",
-        editeDate: "",
+        phone: "",
       },
       inputCheck: true,
     };
@@ -143,22 +142,24 @@ export default {
         this.telValidChk
       ) {
         console.log(this.memberInfo);
-        //데이터 전송 필요.
+        //데이터 전송 필요. PutMapping("/me")
+        axios
+          .put(`${api}/member/me`, this.memberInfo)
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         this.memberInfo = {
-          id: 0,
-          passwd: "",
+          id: "",
           name: "",
           email: "",
-          phoneNum: "",
-          salary: "",
-          position: "",
-          department: "",
-          createDate: "",
-          editeDate: "",
+          phone: "",
         };
-        window.location.href = `/myinfo/${
-          JSON.parse(sessionStorage.getItem("setUser")).userName
-        }`;
+        // window.location.href = `/myinfo/${
+        //   JSON.parse(sessionStorage.getItem("logined")).sub
+        // }`;
       } else {
         this.inputCheck = false;
       }
@@ -173,16 +174,9 @@ export default {
     },
     reset() {
       this.memberInfo = {
-        id: 0,
-        passwd: "",
         name: "",
         email: "",
-        phoneNum: "",
-        salary: "",
-        position: "",
-        department: "",
-        createDate: "",
-        editeDate: "",
+        phone: "",
       };
     },
   },
@@ -197,7 +191,7 @@ export default {
     },
     //번호 유효성 검사
     telValidChk() {
-      if (phoneNumpattern.test(this.memberInfo.phoneNum) === false) {
+      if (phoneNumpattern.test(this.memberInfo.phone) === false) {
         return false;
       } else {
         return true;

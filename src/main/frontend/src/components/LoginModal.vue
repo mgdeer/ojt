@@ -81,15 +81,6 @@ export default {
       userId: "",
       passwd: "",
       validCheck: false,
-      userInfo: {
-        userId: 20240001,
-        userName: "박현수",
-        position: "최고 관리자",
-        email: "gustn400@naver.com",
-        phoneNum: "010-4435-5724",
-        salary: 6000,
-        department: "영업",
-      },
     };
   },
   methods: {
@@ -97,10 +88,6 @@ export default {
     submit() {
       this.validCheck = true;
       //데이터 전송 필요.
-      // 토큰 기한 설정이 무슨말인지? exp로 기한설정이 되어있는거 같던데? exp 시간이 다 지나기전에 한번더 실행해줘야함.
-      // Authorization 을 다시 보내서 유저정보를 받고 로그인 시키면 해당 유저 정보는 세션에 저장? 세선저장하자.
-      //exp이 다되면 accessToken, refreshToken 바디에 넣어서 다시 백엔드 보내줘야하고 post /member/reissue
-      //exp이 계산 필요.
       axios
         .post(`${api}/member/login`, {
           id: this.userId,
@@ -126,7 +113,7 @@ export default {
           };
           sessionStorage.setItem("logined", JSON.stringify(decodedToken));
           sessionStorage.setItem("refresh", refresh);
-          //인풋 폼 리셋
+          //화면 전환
           window.location.href = `/${decodedToken.sub}`;
           axios
             .get("/admin", config)

@@ -128,7 +128,10 @@
                   type="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
-                  v-if="memberInfo.role === 'ROLE_ADMINISTRATOR'"
+                  v-if="
+                    memberInfo.role === 'ROLE_ADMINISTRATOR' ||
+                    memberInfo.role === '관리자'
+                  "
                 >
                   <i class="bi bi-person-badge-fill"></i> 역할 : 관리자
                 </button>
@@ -137,7 +140,10 @@
                   type="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
-                  v-else-if="memberInfo.role === 'ROLE_USER'"
+                  v-else-if="
+                    memberInfo.role === 'ROLE_USER' ||
+                    memberInfo.role === '사원'
+                  "
                 >
                   <i class="bi bi-person-badge-fill"></i> 역할 : 사원
                 </button>
@@ -259,7 +265,7 @@ export default {
         email: "",
         phone: "",
         salary: "",
-        position: "",
+        role: "",
         department: "",
       },
       inputCheck: true,
@@ -310,6 +316,11 @@ export default {
     },
     //수정 버튼 눌렀을 때 메소드
     infoSubmit() {
+      if (this.memberInfo.role === "관리자") {
+        this.memberInfo.role = "ROLE_ADMINISTRATOR";
+      } else {
+        this.memberInfo.role = "ROLE_USER";
+      }
       if (
         this.memberInfo.name.length > 0 &&
         this.memberInfo.salary.length > 0 &&
@@ -323,7 +334,8 @@ export default {
           .put(
             `${api}/member/${
               JSON.parse(JSON.stringify(this.editMemberInfo)).id
-            }`
+            }`,
+            this.memberInfo
           )
           .then((response) => {
             console.log(response);
@@ -332,16 +344,16 @@ export default {
             console.log(error);
           });
         //데이터 전송 필요.
-        // window.location.href = `/management/member/${
-        //   JSON.parse(sessionStorage.getItem("setUser")).userName
-        // }`;
+        window.location.href = `/management/member/${
+          JSON.parse(sessionStorage.getItem("logined")).sub
+        }`;
       } else {
         this.inputCheck = false;
       }
     },
     // 역할 값 메소드
     setPosition(v) {
-      this.memberInfo.position = v;
+      this.memberInfo.role = v;
     },
     // 부서 값 메소드
     setDepartment(v) {
@@ -352,16 +364,12 @@ export default {
       this.inputCheck = true;
       //받아온 기본 값으로 변경
       this.memberInfo = {
-        id: 0,
-        passwd: "",
         name: "",
         email: "",
-        phoneNum: "",
+        phone: "",
         salary: "",
         position: "",
         department: "",
-        createDate: "",
-        editeDate: "",
       };
     },
   },

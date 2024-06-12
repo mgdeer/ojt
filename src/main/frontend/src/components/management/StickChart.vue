@@ -19,6 +19,7 @@ export default {
   name: "stickChart",
   props: {
     userNumYears: Array,
+    maxNum: Number,
   },
   components: {
     apexchart: VueApexCharts,
@@ -61,7 +62,7 @@ export default {
         },
         yaxis: {
           min: 0,
-          max: 100,
+          max: this.maxNum + 10,
         },
         xaxis: {
           categories: ["2020", "2021", "2022", "2023", "2024"],
