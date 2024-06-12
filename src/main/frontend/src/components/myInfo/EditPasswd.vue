@@ -24,6 +24,9 @@
           ></button>
         </div>
         <div class="modal-body">
+          <div style="margin: 15px 0">
+            8자리 이상 영어, 숫자, 특수문자의 조합이여야 합니다
+          </div>
           <!-- 모달 안 내용 -->
           <h5>새 비밀번호</h5>
           <div class="input-group">

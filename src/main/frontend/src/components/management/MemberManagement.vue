@@ -27,7 +27,11 @@
         <div class="charts">
           <SimpleDonut class="circle" :totalNumArr="totalNumArr" />
           <div class="stick">
-            <StickChart class="chart" :userNumYears="userNumYears" />
+            <StickChart
+              class="chart"
+              :userNumYears="userNumYears"
+              :maxNum="maxNum"
+            />
             <DistributedColumns class="chart" :avgArr="avgArr" />
           </div>
         </div>
@@ -433,6 +437,7 @@ export default {
     return {
       //라인 차트 값
       userNumYears: [0, 0, 0, 0, 0],
+      maxNum: 0,
       //막대 차트 값
       avgArr: [0, 0, 0],
       //원형 차트 값
@@ -775,6 +780,9 @@ export default {
           this.members[i].createdDate.slice(0, 4) === "2024" &&
             this.userNumYears[4]++;
         }
+        this.maxNum = Math.max(...this.userNumYears);
+        // console.log(this.userNumYears);
+        // console.log(this.maxNum);
         //데이터에서 연봉 평균 계산 메소드
         //영업 평균
         let salesSum = 0;
