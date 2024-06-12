@@ -3,6 +3,7 @@ package com.example.demo.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -109,4 +110,23 @@ public class TokenProvider {
             return e.getClaims();
         }
     }
+
+    // 내정보 수정 토큰 받아오기
+    public String getUserIdFromToken(HttpServletRequest request) {
+        String token = resolveToken(request);
+        if (token == null) {
+            throw new RuntimeException("유효한 JWT 토큰이 없습니다.");
+        }
+        Claims claims = parseClaims(token);
+        return claims.getSubject(); // sub 필드의 값을 반환
+    }
+
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
 }

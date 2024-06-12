@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.demo.jwt.TokenProvider;
 
 @RestController
 @RequestMapping("/member")
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+    //
+    private final TokenProvider tokenProvider;
 
     @PostMapping("/create")
     public ResponseEntity<String> signup(@RequestBody UserCreateForm userCreateForm) {
@@ -72,10 +75,16 @@ public class MemberController {
     //     return memberService.findById(id);
     // }
 
+    // @PutMapping("/me")
+    // public ResponseEntity<MemberResponseDto> updateMyInfo(@RequestBody MemberUpdateDto memberUpdateDto, HttpServletRequest request) {
+    //     String userId = (String) request.getSession().getAttribute("userId");
+    //     return ResponseEntity.ok(memberService.updateMyInfo(userId, memberUpdateDto));
+    // }
     @PutMapping("/me")
     public ResponseEntity<MemberResponseDto> updateMyInfo(@RequestBody MemberUpdateDto memberUpdateDto, HttpServletRequest request) {
-        String userId = (String) request.getSession().getAttribute("userId");
-        return ResponseEntity.ok(memberService.updateMyInfo(userId, memberUpdateDto));
+
+        String userId = tokenProvider.getUserIdFromToken(request);
+        return ResponseEntity.ok(memberService.updateMemberInfo(userId, memberUpdateDto));
     }
 
     @PostMapping("/changePwd")
