@@ -177,34 +177,37 @@
           </li>
           <!-- 서치바 -->
         </ul>
-        <!-- 필터링 버튼 -->
-        <div class="filterBtn">
-          <button
-            class="btn btn-outline-success manageBtns"
-            type="submit"
-            @click="setList"
-          >
-            필터 적용
-          </button>
-        </div>
-        <!-- 필터링 버튼 -->
         <!-- 체크박스, 서치 -->
         <!-- 리스트 해더 -->
         <div class="listHeader">
           <h4 class="listTitle">사원 리스트</h4>
-          <!-- 사원추가 모달 버튼 -->
-          <button
-            type="button"
-            class="btn btn-outline-success manageBtns"
-            data-bs-toggle="modal"
-            data-bs-target="#addMemberModal"
-          >
-            사원 추가
-          </button>
-          <!-- 사원추가 모달 버튼 -->
-          <!-- 사원추가 모달 -->
-          <AddMember />
-          <!-- 사원추가 모달 -->
+          <div class="listHeaderBtns">
+            <!-- 사원추가 모달 버튼 -->
+            <button
+              type="button"
+              class="btn btn-outline-success manageBtns"
+              data-bs-toggle="modal"
+              data-bs-target="#addMemberModal"
+            >
+              사원 추가
+            </button>
+
+            <!-- 사원추가 모달 버튼 -->
+            <!-- 사원추가 모달 -->
+            <AddMember />
+            <!-- 사원추가 모달 -->
+            <!-- 필터링 버튼 -->
+            <div class="filterBtn">
+              <button
+                class="btn btn-outline-success manageBtns"
+                type="submit"
+                @click="setList"
+              >
+                필터 적용
+              </button>
+            </div>
+            <!-- 필터링 버튼 -->
+          </div>
         </div>
         <!-- 리스트 해더 -->
         <!-- 리스트 -->
@@ -918,8 +921,10 @@ export default {
   display: flex;
   align-items: center;
   justify-content: end;
-  border-bottom: 1px solid gray;
-  padding-bottom: 30px;
+}
+.listHeaderBtns {
+  display: flex;
+  gap: 20px;
 }
 .manageBtns a {
   text-decoration: none;
