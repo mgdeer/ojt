@@ -905,12 +905,8 @@ export default {
   margin: 30px 0 10px 0;
   justify-content: space-between;
 }
-.listTitle {
-}
 .tableText {
   text-align: center;
-}
-.table {
 }
 .listBtns {
   display: flex;
