@@ -45,10 +45,14 @@ public class MemberServiceImpl implements MemberService {
             LocalDate now = LocalDate.now();
             String count = memberRepository.makeId();
             String newId = now.getYear() + "0".repeat(5-count.length()) + count;
+            long newIdNum = Long.parseLong(newId);
+            while(memberRepository.existsByid(newId)){
+                newIdNum++;
+            }
             String encryptedPassword = sha256.encrypt("multiojt19");
             Member member = Member.builder()
                     .salary(userCreateForm.getSalary())
-                    .id(newId)
+                    .id(Long.toString(newIdNum))
                     .password(encryptedPassword)
                     .department(userCreateForm.getDepartment())
                     .email(userCreateForm.getEmail())
