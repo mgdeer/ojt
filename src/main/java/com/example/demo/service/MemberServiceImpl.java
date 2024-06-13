@@ -42,16 +42,18 @@ public class MemberServiceImpl implements MemberService {
     public ResponseEntity<String> signup(UserCreateForm userCreateForm) {
         try {
             LocalDate now = LocalDate.now();
-            String count = memberRepository.makeId();
-            String newId = now.getYear() + "0".repeat(5-count.length()) + count;
-            long newIdNum = Long.parseLong(newId);
-            while(memberRepository.existsByid(newId)){
-                newIdNum++;
+            int year = now.getYear();
+            long ccc = memberRepository.countForCount(year);
+            String newId;
+            if (ccc == 0) {
+                newId = year + "00001";
+            } else {
+                newId = Long.toString(Long.parseLong(memberRepository.makeId()) + 1);
             }
             String encryptedPassword = sha256.encrypt("multiojt19");
             Member member = Member.builder()
                     .salary(userCreateForm.getSalary())
-                    .id(Long.toString(newIdNum))
+                    .id(newId)
                     .password(encryptedPassword)
                     .department(userCreateForm.getDepartment())
                     .email(userCreateForm.getEmail())
