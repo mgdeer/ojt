@@ -39,7 +39,6 @@ public class MemberServiceImpl implements MemberService {
     private final SHA256 sha256;
 
     @Override
-    @Transactional
     public ResponseEntity<String> signup(UserCreateForm userCreateForm) {
         try {
             LocalDate now = LocalDate.now();
