@@ -123,18 +123,19 @@ export default {
           })
           .then((response) => {
             console.log(response);
+            this.newPasswd = "";
+            this.newPasswdCheck = "";
+            console.log("로그아웃");
+            alert("비밀번호가 변경되었습니다.");
+            sessionStorage.removeItem("logined");
+            sessionStorage.removeItem("accessToken");
+            sessionStorage.removeItem("refreshToken");
+            sessionStorage.removeItem("refresh");
+            window.location.href = `/`;
           })
           .catch((error) => {
             console.log(error);
           });
-        this.newPasswd = "";
-        this.newPasswdCheck = "";
-        console.log("로그아웃");
-        sessionStorage.removeItem("logined");
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("refreshToken");
-        sessionStorage.removeItem("refresh");
-        window.location.href = `/`;
       }
     },
     reset() {

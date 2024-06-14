@@ -146,19 +146,20 @@ export default {
           .put(`${api}/member/me`, this.memberInfo)
           .then((response) => {
             console.log(response);
+            alert("내정보가 변경되었습니다.");
+            this.memberInfo = {
+              id: "",
+              name: "",
+              email: "",
+              phone: "",
+            };
+            window.location.href = `/myinfo/${
+              JSON.parse(sessionStorage.getItem("logined")).sub
+            }`;
           })
           .catch((error) => {
             console.log(error);
           });
-        this.memberInfo = {
-          id: "",
-          name: "",
-          email: "",
-          phone: "",
-        };
-        window.location.href = `/myinfo/${
-          JSON.parse(sessionStorage.getItem("logined")).sub
-        }`;
       } else {
         this.inputCheck = false;
       }

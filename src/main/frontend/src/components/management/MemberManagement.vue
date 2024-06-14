@@ -333,7 +333,7 @@
                   </div>
                 </th>
                 <!--상태 정렬 -->
-                <th class="tableText" scope="col">수정 및 삭제</th>
+                <th class="tableText" scope="col">수정 / 삭제</th>
               </tr>
             </thead>
             <!-- 테이블 해더 -->
@@ -357,7 +357,7 @@
                 <td class="tableText">
                   <div class="tavleContact">
                     <div>{{ member.email }}</div>
-                    <div>{{ member.phoneNum }}</div>
+                    <div>{{ member.phone }}</div>
                   </div>
                 </td>
                 <td class="tableText">{{ member.modDate.slice(0, 10) }}</td>
@@ -905,7 +905,7 @@ export default {
 .listHeader {
   display: flex;
   width: 100%;
-  margin: 30px 0 10px 0;
+  margin: 20px 0 10px 0;
   justify-content: space-between;
 }
 .tableText {
